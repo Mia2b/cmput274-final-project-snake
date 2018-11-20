@@ -6,9 +6,16 @@
 // Final Project                                                           //
 /////////////////////////////////////////////////////////////////////////////
 #include <Arduino.h>
-
+#include "Actor.h"
+using namespace game;
 int main()
 {
   init();
+  Serial.begin(9600);
+  game::Actor obj;
+  while(true)
+  {
+    obj.update();
+  }
 	return 0;
 }
