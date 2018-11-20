@@ -10,6 +10,6 @@ Vin -> 5V
 CLK -> Digital 52
 MISO -> Digital 50
 MOSI -> Digital 51
-CD -> Digital 10
-D/C -> Digital 9
-RST -> Digital 8
+CS -> Digital 48 
+D/C -> Digital 49
+RST -> Digital 53
