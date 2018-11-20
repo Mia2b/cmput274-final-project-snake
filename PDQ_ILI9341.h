@@ -43,7 +43,7 @@
 #include "Arduino.h"
 #include "Print.h"
 
-#include <PDQ_GFX.h>
+#include "PDQ_GFX.h"
 
 #include <avr/pgmspace.h>
 
@@ -51,7 +51,7 @@
 #error Oops!  You need to #include "PDQ_ILI9341_config.h" (modified with your pin configuration and options) from your sketch before #include "PDQ_ILI9341.h".
 #endif
 
-#include <PDQ_FastPin.h>
+#include "PDQ_FastPin.h"
 
 #if !defined(__AVR_ATtiny85__) && !defined(__AVR_ATtiny45__)
 #define INLINE		inline
