@@ -1,9 +1,0 @@
-void run()
-{
-
-}
-
-void render()
-{
-    
-}
