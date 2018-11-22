@@ -23,31 +23,36 @@ Controller::Controller(uint8_t pinX, uint8_t pinY, uint8_t pinB)
 
 uint8_t Controller::getDirection()
 {
-    // int x = analogRead(pinX);
-    // int y = analogRead(pinY);
-    /*
-    if ()
+    int x = analogRead(pinX);
+    int y = analogRead(pinY);
+
+    if ((y <= (MiddleY - deadZone)) && (lastMove != DOWN))
     {   // UP
-
+        lastMove = UP;
+        return UP;
     }
-    else if ()
+    else if ((x >= (MiddleX + deadZone)) && (lastMove != LEFT))
     {   // RIGHT
-
+        lastMove = RIGHT;
+        return RIGHT;
     }
-    else if ()
+    else if ((x <= (MiddleX - deadZone)) && (lastMove != RIGHT))
     {   // LEFT
-
+        lastMove = LEFT;
+        return LEFT;
     }
-    else if ()
+    else if ((y >= (MiddleY + deadZone)) && (lastMove != UP))
     {   // DOWN
-
+        lastMove = DOWN;
+        return DOWN;
     }
     else
     {   // NO INPUT
-
+        return lastMove
     }
-    */
+
     //The following is temp for testing
+    /*
     if ((Serial.read() == 'w') && (lastMove == LEFT || lastMove == RIGHT))
     {   // UP
         lastMove = UP;
@@ -72,4 +77,5 @@ uint8_t Controller::getDirection()
     {   // NO INPUT
         return lastMove;
     }
+    */
 }
