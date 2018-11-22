@@ -10,7 +10,7 @@
 #include "PDQ_GFX.h"				// PDQ: Core graphics library
 #include "PDQ_ILI9341_config.h"			// PDQ: ILI9341 pins and other setup for this sketch
 #include "PDQ_ILI9341.h"			// PDQ: Hardware-specific driver library  
-#include "snake.h"                                     
+//#include "snake.h"                                     
 
 PDQ_ILI9341 tft;			// PDQ: create LCD object (using pins in "PDQ_ILI9341_config.h")
 
