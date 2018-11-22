@@ -11,6 +11,7 @@
 #include "PDQ_ILI9341_config.h"			// PDQ: ILI9341 pins and other setup for this sketch
 #include "PDQ_ILI9341.h"			// PDQ: Hardware-specific driver library  
 #include "Snake.h"
+#include "Controller.h"
 
 PDQ_ILI9341 tft;			// PDQ: create LCD object (using pins in "PDQ_ILI9341_config.h")
 
@@ -46,7 +47,15 @@ int main()
 		Snake::coordinates cords = snek.getCords();
 		tft.fillRect(cords.x*8, cords.y*8, 8, 8, tft.color565(random(255),random(255),random(255)));
 		delay(60);
+//	Snake snek = Snake(3);
+ 	/*
+        Controller controls = Controller(A0, A1, 13);
+  	while(true)
+  	{
+//		snek.update();
+                Serial.println(controls.getDirection());
   	}
+	  */
 	return 0;
 }
 
