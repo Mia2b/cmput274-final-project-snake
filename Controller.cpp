@@ -23,6 +23,7 @@ Controller::Controller(uint8_t pinX, uint8_t pinY, uint8_t pinB)
 
 uint8_t Controller::getDirection()
 {
+    /*
     int x = analogRead(pinX) - middleX;
     int y = analogRead(pinY) - middleY;
     uint16_t mag = sqrt(x*x + y*y);
@@ -60,7 +61,7 @@ uint8_t Controller::getDirection()
     {   // NO INPUT
         return lastMove;
     }
-
+    */
     //The following is temp for testing
         char myChar = Serial.read();
         if ((myChar == 'w') && (lastMove != DOWN))

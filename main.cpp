@@ -6,10 +6,10 @@
 // Final Project                                                           //
 /////////////////////////////////////////////////////////////////////////////
 #include <Arduino.h>
-#include <SPI.h>
-#include "PDQ_GFX.h"				// PDQ: Core graphics library
-#include "PDQ_ILI9341_config.h"			// PDQ: ILI9341 pins and other setup for this sketch
-#include "PDQ_ILI9341.h"			// PDQ: Hardware-specific driver library  
+#include <SPI.h>	
+#include "PDQ_GFX.h"			// PDQ: Core graphics library
+#include "PDQ_ILI9341_config.h"	// PDQ: ILI9341 pins and other setup for this sketch
+#include "PDQ_ILI9341.h"		// PDQ: Hardware-specific driver library  
 #include "Snake.h"
 #include "Controller.h"
 
@@ -45,8 +45,11 @@ int main()
   	{
 		snek.update();
 		Snake::coordinates cords = snek.getCords();
-		tft.fillRect(cords.x*8, cords.y*8, 8, 8, tft.color565(random(255),random(255),random(255)));
-		delay(60);
+		Snake::coordinates endCord = snek.getEnd();
+		tft.fillRect(cords.x*8, cords.y*8, 8, 8, tft.color565(255,255,255));
+		tft.fillRect(endCord.x*8, endCord.y*8, 8, 8, tft.color565(0,0,0));
+		delay(50);
+	}
 //	Snake snek = Snake(3);
  	/*
         Controller controls = Controller(A0, A1, 13);
