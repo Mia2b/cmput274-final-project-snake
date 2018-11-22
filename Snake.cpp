@@ -1,6 +1,7 @@
 #include "Snake.h"
 
-Snake::Snake(uint8_t x, uint8_t y)
+
+Snake::Snake(uint16_t pos)
 {
 
 }

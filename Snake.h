@@ -1,16 +1,16 @@
 #ifndef snake_h
 #define snake_h
+#include <Arduino.h>
 
 class Snake
 {
     private:
-        uint8_t newX, newY;
-        uint8_t direction;
-        uint8_t length;
+        uint16_t newPos;
         void move();
         void drawBody();
+        
     public:
-        Snake(uint8_t x, uint8_t y);
+        Snake(uint16_t pos);
         void update();
 };
 #endif
