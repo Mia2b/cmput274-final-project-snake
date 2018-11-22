@@ -23,32 +23,42 @@ Controller::Controller(uint8_t pinX, uint8_t pinY, uint8_t pinB)
 
 uint8_t Controller::getDirection()
 {
-    int x = analogRead(pinX);
-    int y = analogRead(pinY);
+    int x = analogRead(pinX) - middleX;
+    int y = analogRead(pinY) - middleY;
+    uint16_t mag = sqrt(x*x + y*y);
+    double angle = atan(abs(x)/abs(y));
+    double ideal = PI/4.0;
+    Serial.println(x);
+    Serial.println(y);
+    Serial.println(angle);
 
-    if ((y <= (MiddleY - deadZone)) && (lastMove != DOWN))
+    if ( mag < deadZone)
+    {
+        return lastMove;
+    }
+    else if ((x <= 0) && (lastMove != DOWN) && (angle > PI/ideal))
     {   // UP
         lastMove = UP;
         return UP;
     }
-    else if ((x >= (MiddleX + deadZone)) && (lastMove != LEFT))
+    else if ((y >= 0) && (lastMove != LEFT) && (angle < PI/ideal))
     {   // RIGHT
         lastMove = RIGHT;
         return RIGHT;
     }
-    else if ((x <= (MiddleX - deadZone)) && (lastMove != RIGHT))
+    else if ((y <= 0) && (lastMove != RIGHT) && (angle < PI/ideal))
     {   // LEFT
         lastMove = LEFT;
         return LEFT;
     }
-    else if ((y >= (MiddleY + deadZone)) && (lastMove != UP))
+    else if ((x >= 0) && (lastMove != UP) && (angle > PI/ideal))
     {   // DOWN
         lastMove = DOWN;
         return DOWN;
     }
     else
     {   // NO INPUT
-        return lastMove
+        return lastMove;
     }
 
     //The following is temp for testing
