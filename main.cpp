@@ -10,7 +10,7 @@
 #include "PDQ_GFX.h"				// PDQ: Core graphics library
 #include "PDQ_ILI9341_config.h"			// PDQ: ILI9341 pins and other setup for this sketch
 #include "PDQ_ILI9341.h"			// PDQ: Hardware-specific driver library  
-//#include "snake.h"                                     
+#include "Snake.h"
 
 PDQ_ILI9341 tft;			// PDQ: create LCD object (using pins in "PDQ_ILI9341_config.h")
 
@@ -24,6 +24,7 @@ void setup()
 
 void loop(void)
 {
+	snek.update();
 	/*
 	TODO have the snake move on command
 	TODO have the snake move in the input direction
@@ -37,10 +38,11 @@ int main()
 {
   	init();
   	setup();
-	
+	//uint16_t cords = ((x)<<8)+();
+	Snake snek = Snake(3);
   	while(true)
   	{
-		loop();
+		snek.update();
   	}
 	return 0;
 }
