@@ -24,7 +24,7 @@ void setup()
 
 void loop(void)
 {
-	snek.update();
+	//snek.update();
 	/*
 	TODO have the snake move on command
 	TODO have the snake move in the input direction
@@ -39,10 +39,13 @@ int main()
   	init();
   	setup();
 	//uint16_t cords = ((x)<<8)+();
-	Snake snek = Snake(3);
+	Snake snek = Snake(3,5);
   	while(true)
   	{
 		snek.update();
+		Snake::coordinates cords = snek.getCords();
+		tft.fillRect(cords.x*8, cords.y*8, 8, 8, tft.color565(random(255),random(255),random(255)));
+		delay(60);
   	}
 	return 0;
 }

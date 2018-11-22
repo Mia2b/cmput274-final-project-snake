@@ -48,28 +48,29 @@ uint8_t Controller::getDirection()
     }
     */
     //The following is temp for testing
-    if ((Serial.read() == 'w') && (lastMove == LEFT || lastMove == RIGHT))
-    {   // UP
-        lastMove = UP;
-        return UP;
-    }
-    else if ((Serial.read() == 'd') && (lastMove == UP || lastMove == DOWN))
-    {   // RIGHT
-        lastMove = RIGHT;
-        return RIGHT;
-    }
-    else if ((Serial.read() == 'a') && (lastMove == UP || lastMove == DOWN))
-    {   // LEFT
-        lastMove = LEFT;
-        return LEFT;
-    }
-    else if ((Serial.read() == 's') && (lastMove == LEFT || lastMove == RIGHT))
-    {   // DOWN
-        lastMove = DOWN;
-        return DOWN;
-    }
-    else
-    {   // NO INPUT
-        return lastMove;
-    }
+        char myChar = Serial.read();
+        if ((myChar == 'w') && (lastMove != DOWN))
+        {   // UP
+            lastMove = UP;
+            return UP;
+        }
+        else if ((myChar == 'd') && (lastMove != LEFT))
+        {   // RIGHT
+            lastMove = RIGHT;
+            return RIGHT;
+        }
+        else if ((myChar == 'a') && (lastMove != RIGHT))
+        {   // LEFT
+            lastMove = LEFT;
+            return LEFT;
+        }
+        else if ((myChar == 's') && (lastMove != UP))
+        {   // DOWN
+            lastMove = DOWN;
+            return DOWN;
+        }
+        else
+        {   // NO INPUT
+            return lastMove;
+        }
 }
