@@ -26,5 +26,25 @@ uint8_t Controller::getDirection()
 {
     int x = analogRead(pinX);
     int y = analogRead(pinY);
-    
+
+    if ()
+    {   // UP
+
+    }
+    else if ()
+    {   // RIGHT
+
+    }
+    else if ()
+    {   // LEFT
+
+    }
+    else if ()
+    {   // DOWN
+
+    }
+    else
+    {   // NO INPUT
+
+    }
 }
