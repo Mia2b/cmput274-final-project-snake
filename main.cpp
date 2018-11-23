@@ -38,28 +38,21 @@ void loop(void)
 
 int main()
 {
+	//int rgb[3] = {255,0,0};
   	init();
   	setup();
 	//uint16_t cords = ((x)<<8)+();
-	Snake snek = Snake(3,5);
+	Snake snek = Snake(3,5, WIDTH, HEIGHT);
+	int s = 4;
   	while(true)
   	{
 		snek.update();
 		Snake::coordinates cords = snek.getCords();
 		Snake::coordinates endCord = snek.getEnd();
-		tft.fillRect(cords.x*8, cords.y*8, 8, 8, tft.color565(255,255,255));
-		tft.fillRect(endCord.x*8, endCord.y*8, 8, 8, tft.color565(0,0,0));
+		tft.fillRect(cords.x*s, cords.y*s, s, s, tft.color565(255-sqrt(cords.y*s*0.8f*cords.x*s*1.0666f),cords.y*s*0.8f,cords.x*s*1.0666f));
+		tft.fillRect(endCord.x*s, endCord.y*s, s, s, ILI9341_BLACK);
 		delay(50);
 	}
-//	Snake snek = Snake(3);
- 	/*
-        Controller controls = Controller(A0, A1, 13);
-  	while(true)
-  	{
-//		snek.update();
-                Serial.println(controls.getDirection());
-  	}
-	  */
 	return 0;
 }
 

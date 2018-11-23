@@ -7,12 +7,13 @@ const uint8_t RIGHT = 1;
 const uint8_t LEFT = 2;
 const uint8_t DOWN = 3;
 
-Snake::Snake(uint8_t x, uint8_t y)
+Snake::Snake(uint8_t x, uint8_t y, uint16_t w, uint16_t h)
 {
     cords.x = x;
     cords.y = y;
     history1 = 0;
     history0 = 0;
+    length = 64;
 }
 
 void Snake::update()
@@ -39,7 +40,23 @@ Snake::coordinates Snake::getCords()
     return cords;
 }
 
-bool Snake::isInHistory(int x, int y)
+Snake::coordinates Snake::getEnd()
+{
+    coordinates endSeg = cords;
+    for (uint8_t i = 0 ; i < length; i++)
+    {
+        //Serial.println(history0);
+        uint8_t direction = (((history1>>(i))&1) << 1) + ((history0>>(i))&1);
+        direction = (~direction)&3;
+        if (direction == UP) endSeg.y--;
+        else if (direction == RIGHT) endSeg.x++;
+        else if (direction == LEFT) endSeg.x--;
+        else if (direction == DOWN) endSeg.y++;
+    }
+    return endSeg;
+}
+
+bool Snake::isInHistory(uint16_t x, uint16_t y)
 {
     coordinates seg = cords;
     for (int i = 0 ; i < length; i++)
@@ -56,25 +73,4 @@ bool Snake::isInHistory(int x, int y)
         }
     }
     return false;
-}
-
-Snake::coordinates Snake::getEnd()
-{
-    coordinates endSeg = cords;
-    for (int i = 0 ; i < length; i++)
-    {
-        //Serial.println(history0);
-        uint8_t direction = (((history1>>(i))&1) << 1) + ((history0>>(i))&1);
-        direction = (~direction)&3;
-        if (direction == UP) endSeg.y--;
-        else if (direction == RIGHT) endSeg.x++;
-        else if (direction == LEFT) endSeg.x--;
-        else if (direction == DOWN) endSeg.y++;
-    }
-    return endSeg;
-}
-
-void Snake::drawBody()
-{
-    
 }
