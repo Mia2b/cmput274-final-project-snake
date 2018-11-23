@@ -16,6 +16,7 @@ class Snake
         void update();
         coordinates getCords();
         coordinates getEnd();
+        bool isInHistory(uint16_t x, uint32_t y);
     private:
         coordinates cords;
         void move(uint8_t direction);

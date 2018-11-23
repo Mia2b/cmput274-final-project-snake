@@ -14,7 +14,8 @@
 #include "Controller.h"
 
 PDQ_ILI9341 tft;			// PDQ: create LCD object (using pins in "PDQ_ILI9341_config.h")
-
+const int WIDTH = tft.width();	// should be 240
+const int HEIGHT = tft.height(); // should be 320
 void setup()
 {
 	Serial.begin(9600);

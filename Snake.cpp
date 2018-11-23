@@ -39,6 +39,25 @@ Snake::coordinates Snake::getCords()
     return cords;
 }
 
+bool Snake::isInHistory(int x, int y)
+{
+    coordinates seg = cords;
+    for (int i = 0 ; i < length; i++)
+    {
+        uint8_t direction = (((history1>>(i))&1) << 1) + ((history0>>(i))&1);
+        direction = (~direction)&3;
+        if (direction == UP) seg.y--;
+        else if (direction == RIGHT) seg.x++;
+        else if (direction == LEFT) seg.x--;
+        else if (direction == DOWN) seg.y++;
+        if(seg.x == x && seg.y == y)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 Snake::coordinates Snake::getEnd()
 {
     coordinates endSeg = cords;
@@ -51,14 +70,10 @@ Snake::coordinates Snake::getEnd()
         else if (direction == RIGHT) endSeg.x++;
         else if (direction == LEFT) endSeg.x--;
         else if (direction == DOWN) endSeg.y++;
-
-        if (endSeg.x == cords.x && endSeg.y == cords.y)
-        {
-            Serial.println("Ouch");
-        }
     }
     return endSeg;
 }
+
 void Snake::drawBody()
 {
     
