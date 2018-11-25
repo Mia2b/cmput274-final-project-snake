@@ -45,9 +45,9 @@ int main()
 	//uint16_t cords = ((x)<<8)+();
 	Snake snek = Snake(3,5, WIDTH, HEIGHT);
 	int s = 4;
-  apples.makeCoord(WIDTH, HEIGHT);
-  apples::Coord apple = apples.appleMake();
-  tft.fillcircle(apple.aX, apple.aY, s/2, tft.color565(224, 0, 0));
+  makeCoordinates(WIDTH, HEIGHT, snek);
+  Apple apple = getApple();
+  tft.fillCircle(apple.aX, apple.aY, s/2, tft.color565(224, 0, 0));
   	while(true)
   	{
 		snek.update();
@@ -55,10 +55,10 @@ int main()
 		Snake::coordinates endCord = snek.getEnd();
 		tft.fillRect(cords.x*s, cords.y*s, s, s, tft.color565(255-sqrt(cords.y*s*0.8f*cords.x*s*1.0666f),cords.y*s*0.8f,cords.x*s*1.0666f));
 		tft.fillRect(endCord.x*s, endCord.y*s, s, s, ILI9341_BLACK);
-    if (appples.appleCheck(WIDTH, HEIGHT)) {
-      apples::Coord apple = apples.appleMake();
-      tft.fillcircle(apple.aX, apple.aY, s/2, tft.color565(224, 0, 0));
-      // TODO Increase snake length
+    if (appleCheck(WIDTH, HEIGHT, snek)) {
+      Apple apple = getApple();
+      tft.fillCircle(apple.aX, apple.aY, s/2, tft.color565(224, 0, 0));
+      // FIXME snek.Increase();
     }
 		delay(50);
 	}

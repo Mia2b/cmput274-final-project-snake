@@ -1,4 +1,4 @@
-#include "Arduino.h"
+/* #include "Arduino.h"
 #include "Snake.h"
 #include "apples.h"
 
@@ -7,7 +7,7 @@ void apples::makeCoord(screenWidth, screenLength) {
 
     appleCurrent.aX = random(0, screenWidth);
     appleCurrent.aY = random(0, screenLength);
-
+}
     while (Snake.isInHistory(appleCurrent.aX, appleCurrent.aY) {
 
       appleCurrent.aX = random(0, screenWidth);
@@ -22,7 +22,7 @@ bool apples::appleCheck(screenWidth, screenLength) {
 
     if (Snake.isInHistory(appleCurrent.aX, appleCurrent.aY)) {
 
-        makeCoord(screenWidth, screenLength
+        makeCoord(screenWidth, screenLength);
         return true;
 
     } else {
@@ -39,3 +39,4 @@ apples::Coord apples::appleMake() {
     return appleCurrent;
 
 }
+*/
