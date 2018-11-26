@@ -1,6 +1,7 @@
 #include "Snake.h"
 #include <Arduino.h>
 #include "Controller.h"
+#include "Crumb.h"
 
 const uint8_t UP = 0;
 const uint8_t RIGHT = 1;
@@ -11,9 +12,8 @@ Snake::Snake(uint8_t x, uint8_t y, uint16_t w, uint16_t h)
 {
     cords.x = x;
     cords.y = y;
-    history1 = 0;
-    history0 = 0;
-    length = 64;
+    length = 1024;
+    moveHistory.setLength(length+1);
 }
 
 void Snake::update()
@@ -29,10 +29,7 @@ void Snake::move(uint8_t direction)
     else if (direction == LEFT) cords.x--;
     else if (direction == DOWN) cords.y++;
     //direction is two bits wide - 0,1,2,3 - store each bit in the history;
-    history1 <<=1;
-    history0 <<=1;
-    history1 += (direction>>1)&1;
-    history0 += direction&1;
+    moveHistory.insert(direction);
 }
 
 Snake::coordinates Snake::getCords()
@@ -43,11 +40,10 @@ Snake::coordinates Snake::getCords()
 Snake::coordinates Snake::getEnd()
 {
     coordinates endSeg = cords;
-    for (uint8_t i = 0 ; i < length; i++)
+    for (uint16_t i = 0 ; i < length; i++)
     {
         //Serial.println(history0);
-        uint8_t direction = (((history1>>(i))&1) << 1) + ((history0>>(i))&1);
-        direction = (~direction)&3;
+        uint8_t direction = moveHistory.getMove(i)^3;
         if (direction == UP) endSeg.y--;
         else if (direction == RIGHT) endSeg.x++;
         else if (direction == LEFT) endSeg.x--;
@@ -59,10 +55,9 @@ Snake::coordinates Snake::getEnd()
 bool Snake::isInHistory(uint16_t x, uint16_t y)
 {
     coordinates seg = cords;
-    for (int i = 0 ; i < length; i++)
+    for (uint16_t i = 0 ; i < length; i++)
     {
-        uint8_t direction = (((history1>>(i))&1) << 1) + ((history0>>(i))&1);
-        direction = (~direction)&3;
+        uint8_t direction = moveHistory.getMove(i)^3;
         if (direction == UP) seg.y--;
         else if (direction == RIGHT) seg.x++;
         else if (direction == LEFT) seg.x--;

@@ -4,22 +4,44 @@
 #include "Arduino.h"
 #include "Snake.h"
 
-class apples {
-    
-    public:
+struct Apple {
+    uint16_t aX;
+    uint16_t aY;
+};
 
-        struct Coord {
-            uint8_t aX;
-            uint8_t aY;
-        };
+Apple appleCoordinates;
 
-        void makeCoord(uint8_t screenWidth, uint8_t screenLength);
-        Coord appleMake();
-        bool appleCheck();
+void makeCoordinates(uint16_t WIDTH, uint16_t HEIGHT, Snake snek) {
 
-    private:
+    randomSeed(analogRead(0));
+    appleCoordinates.aX = random(0, WIDTH);
+    appleCoordinates.aY = random(0, HEIGHT);
 
-        Coord appleCurrent;
+    if (snek.isInHistory(appleCoordinates.aX, appleCoordinates.aY)) {
+        
+        appleCoordinates.aX = random(0, WIDTH);
+        appleCoordinates.aY = random(0, HEIGHT);
+
+    }
+}
+
+bool appleCheck(uint16_t WIDTH, uint16_t HEIGHT, Snake snek) {
+
+    if (snek.isInHistory(appleCoordinates.aX, appleCoordinates.aY)) {
+
+        makeCoordinates(WIDTH, HEIGHT, snek);
+        return true;
+
+    } else {
+
+        return false;
+
+    }
+}
+
+Apple getApple() {
+
+    return appleCoordinates;
 
 }
 

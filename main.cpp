@@ -13,7 +13,7 @@
 #include "Snake.h"
 #include "Controller.h"
 #include "sinWave.h"
-//#include "apples.h"
+#include "apples.h"
 
 PDQ_ILI9341 tft;			// PDQ: create LCD object (using pins in "PDQ_ILI9341_config.h")
 const int WIDTH = tft.width();	// should be 240
@@ -46,15 +46,15 @@ int main()
 	//uint16_t cords = ((x)<<8)+();
 	Snake snek = Snake(3,5, WIDTH, HEIGHT);
 	int s = 4;
-  //apples.makeCoord(WIDTH, HEIGHT);
-  //apples::Coord apple = apples.appleMake();
-  //tft.fillcircle(apple.aX, apple.aY, s/2, tft.color565(224, 0, 0));
 	int c = 0;
 	//for (int i = 0; i < WIDTH/4; i++)
 	//{
 	//	tft.fillRect(cords.x*s+5*s, cords.y*s, s, s, tft.color565(255-sqrt(cords.y*s*0.8f*cords.x*s*1.0666f),cords.y*s*0.8f,cords.x*s*1.0666f));
 	//}
 	//tft.fillRect(cords.x*s+5*s, cords.y*s, s, s, tft.color565(255-sqrt(cords.y*s*0.8f*cords.x*s*1.0666f),cords.y*s*0.8f,cords.x*s*1.0666f));
+  makeCoordinates(WIDTH, HEIGHT, snek);
+  Apple apple = getApple();
+  tft.fillCircle(apple.aX, apple.aY, s/2, tft.color565(224, 0, 0));
   	while(true)
   	{
 		snek.update();
@@ -62,18 +62,18 @@ int main()
 		Snake::coordinates endCord = snek.getEnd();
 		tft.fillRect(cords.x*s, cords.y*s, s, s, tft.color565(255-sqrt(cords.y*s*0.8f*cords.x*s*1.0666f),cords.y*s*0.8f,cords.x*s*1.0666f));
 		//tft.fillRect(cords.x*s, cords.y*s, s, s, tft.color565(sinWave[c%360],sinWave[(c+120)%360],sinWave[(c+240)%360]));
-		//tft.fillRect(endCord.x*s, endCord.y*s, s, s, ILI9341_BLACK);
-		/*
-    if (appples.appleCheck(WIDTH, HEIGHT)) {
-      apples::Coord apple = apples.appleMake();
-      tft.fillcircle(apple.aX, apple.aY, s/2, tft.color565(224, 0, 0));
-      // TODO Increase snake length
-    }	
-	*/	
+		tft.fillRect(endCord.x*s, endCord.y*s, s, s, ILI9341_BLACK);
 		c++;
 		c %= 360;
-		delay(50);
-	}
+		tft.fillRect(endCord.x*s, endCord.y*s, s, s, ILI9341_BLACK);
+		if (appleCheck(WIDTH, HEIGHT, snek)) {
+		Apple apple = getApple();
+		
+		// FIXME snek.Increase();
+		}
+		tft.fillCircle(apple.aX, apple.aY, s/2, tft.color565(sinWave[c%360],sinWave[(c+120)%360],sinWave[(c+240)%360]));
+			//delay(25);
+		}
 	return 0;
 }
 

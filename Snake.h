@@ -3,6 +3,7 @@
 
 #include "Controller.h"
 #include <Arduino.h>
+#include "Crumb.h"
 
 class Snake
 {
@@ -21,8 +22,7 @@ class Snake
         coordinates cords;
         void move(uint8_t direction);
         Controller controller = Controller(A1,A0,13);
-        uint64_t history0;
-        uint64_t history1;
+        Crumb moveHistory;
         uint16_t length;
     
 };
