@@ -12,7 +12,7 @@ Snake::Snake(uint8_t x, uint8_t y, uint16_t w, uint16_t h)
 {
     cords.x = x;
     cords.y = y;
-    length = 1024;
+    length = 250;
     moveHistory.setLength(length+1);
 }
 
