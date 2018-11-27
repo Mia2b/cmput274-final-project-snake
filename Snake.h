@@ -21,7 +21,7 @@ class Snake
     private:
         coordinates cords;
         void move(uint8_t direction);
-        Controller controller = Controller(A1,A0,13);
+        Controller controller = Controller(A0,A1,13);
         Crumb moveHistory;
         uint16_t length;
     

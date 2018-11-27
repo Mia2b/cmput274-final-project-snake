@@ -44,7 +44,7 @@ int main()
   	init();
   	setup();
 	//uint16_t cords = ((x)<<8)+();
-	Snake snek = Snake(3,5, WIDTH, HEIGHT);
+	Snake snek = Snake(8,8, WIDTH, HEIGHT);
 	int s = 8;
 	int c = 0;
 	//for (int i = 0; i < WIDTH/4; i++)

@@ -23,7 +23,6 @@ void Snake::update()
 
 void Snake::move(uint8_t direction)
 {
-    Serial.println(direction);
     if (direction == UP) cords.y--;
     else if (direction == RIGHT) cords.x++;
     else if (direction == LEFT) cords.x--;
