@@ -26,15 +26,10 @@ uint8_t Controller::getDirection()
 
     int x = analogRead(pinX) - middleX;
     int y = analogRead(pinY) - middleY;
-    Serial.println("x");
-    Serial.println(x);
-    Serial.println("y");
-    Serial.println(y);
     double mag = pow((pow(x, 2) + pow(y, 2)), 0.5);
     float angle;
     angle = atan2(-y,x)*(180.0/PI);
 
-    char c;
     Serial.println("Mag");
     Serial.println(mag);
 
