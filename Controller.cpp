@@ -30,13 +30,14 @@ uint8_t Controller::getDirection()
     Serial.println(x);
     Serial.println("y");
     Serial.println(y);
-    int mag = sqrt(sq(x) + sq(y));
+    double mag = pow((pow(x, 2) + pow(y, 2)), 0.5);
     float angle;
     angle = atan2(-y,x)*(180.0/PI);
 
     char c;
     Serial.println("Mag");
     Serial.println(mag);
+
     if ( mag < int(deadZone))
     {
         Serial.println("Dead");
