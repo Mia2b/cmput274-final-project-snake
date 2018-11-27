@@ -17,12 +17,12 @@ void Crumb::insert(uint8_t direction)
 {
     if (lengthChanged)
     {
-        storageSize = length>>5;
+        storageSize = (length>>5) + 1;
         lengthChanged = false;
     }
     //Serial.println(storageSize);
     uint8_t hold = direction;
-    for (uint16_t i = 0 ; i <= storageSize ; i++)
+    for (uint16_t i = 0 ; i < storageSize ; i++)
     {
         uint8_t store = hold;
         hold = ((moves[i]>>62)&3);
