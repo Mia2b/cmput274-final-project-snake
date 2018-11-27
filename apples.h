@@ -1,10 +1,11 @@
 #ifndef apples_h
 #define apples_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include "Snake.h"
 
-struct Apple {
+struct Apple 
+{
     uint16_t aX;
     uint16_t aY;
 };

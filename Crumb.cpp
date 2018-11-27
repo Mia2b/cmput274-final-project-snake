@@ -3,14 +3,16 @@
 
 Crumb::Crumb()
 {
-  length = 8; 
-  lengthChanged = true; 
+    length = 8; 
+    lengthChanged = true;
 }
+
 void Crumb::setLength(uint16_t len)
 {
     length = len;
     lengthChanged = true;
 }
+
 void Crumb::insert(uint8_t direction)
 {
     if (lengthChanged)
@@ -28,6 +30,7 @@ void Crumb::insert(uint8_t direction)
         moves[i] += store;
     }
 }
+
 uint8_t Crumb::getMove(uint16_t index)
 {
     uint16_t subArray = index>>5;

@@ -40,39 +40,63 @@ void loop(void)
 
 int main()
 {
-	//int rgb[3] = {255,0,0};
   	init();
   	setup();
-	//uint16_t cords = ((x)<<8)+();
 	Snake snek = Snake(8,8, WIDTH, HEIGHT);
-	int s = 8;
+	int s = 6;
 	int c = 0;
-	//for (int i = 0; i < WIDTH/4; i++)
-	//{
-	//	tft.fillRect(cords.x*s+5*s, cords.y*s, s, s, tft.color565(255-sqrt(cords.y*s*0.8f*cords.x*s*1.0666f),cords.y*s*0.8f,cords.x*s*1.0666f));
-	//}
-	//tft.fillRect(cords.x*s+5*s, cords.y*s, s, s, tft.color565(255-sqrt(cords.y*s*0.8f*cords.x*s*1.0666f),cords.y*s*0.8f,cords.x*s*1.0666f));
-  makeCoordinates(WIDTH, HEIGHT, snek);
-  Apple apple = getApple();
-  tft.fillCircle(apple.aX, apple.aY, s/2, tft.color565(224, 0, 0));
+	
+  	makeCoordinates(WIDTH, HEIGHT, snek);
+  	Apple apple = getApple();
+  	tft.fillCircle(apple.aX, apple.aY, s/2, tft.color565(224, 0, 0));
+
+	struct xy
+	{
+		int x;
+		int y;
+	} b;
+	b.x = 39;
+	b.y = 49;
+
+	tft.drawRect(0,0,WIDTH,HEIGHT, ILI9341_WHITE);
+	tft.drawRect(1,1,WIDTH-2,HEIGHT-2, ILI9341_WHITE);
+	tft.drawRect(2,2,WIDTH-4,HEIGHT-4, ILI9341_WHITE);
+
+	tft.drawRect(0,HEIGHT-(b.y+1)*6,WIDTH,(b.y+1)*6, ILI9341_WHITE);
+	tft.drawRect(1,HEIGHT-(b.y+1)*6+1,WIDTH-2,(b.y+1)*6-2, ILI9341_WHITE);
+	tft.drawRect(2,HEIGHT-(b.y+1)*6+2,WIDTH-4,(b.y+1)*6-4, ILI9341_WHITE);
+
+	
+	//tft.fillRect(0,0)
+	/*
+	for (int i = 0 ; i < b.y; i++ )
+	{
+		tft.fillRect(3, i*s+23, s, s, tft.color565(255,255*(i&1),255));
+	}
+	*/
   	while(true)
   	{
 		snek.update();
 		Snake::coordinates cords = snek.getCords();
 		Snake::coordinates endCord = snek.getEnd();
-		tft.fillRect(cords.x*s, cords.y*s, s, s, tft.color565(255-sqrt(cords.y*s*0.8f*cords.x*s*1.0666f),cords.y*s*0.8f,cords.x*s*1.0666f));
-		//tft.fillRect(cords.x*s, cords.y*s, s, s, tft.color565(sinWave[c%360],sinWave[(c+120)%360],sinWave[(c+240)%360]));
-		tft.fillRect(endCord.x*s, endCord.y*s, s, s, ILI9341_BLACK);
+		tft.fillRect((cords.x%b.x)*s+3, (cords.y%b.y)*s+23, s, s, tft.color565(255-sqrt((cords.y%b.y)*s*0.8f*(cords.x%b.x)*s*1.0666f),(cords.y%b.y)*s*0.8f,(cords.x%b.x)*s*1.0666f));
+		tft.fillRect((endCord.x%b.x)*s+3, (endCord.y%b.y)*s+23, s, s, ILI9341_BLACK);
+
+
+
 		c++;
 		c %= 360;
-		tft.fillRect(endCord.x*s, endCord.y*s, s, s, ILI9341_BLACK);
+
+
+
+
 		if (appleCheck(WIDTH, HEIGHT, snek)) {
 		Apple apple = getApple();
 		
 		// FIXME snek.Increase();
 		}
 		tft.fillCircle(apple.aX, apple.aY, s/2, tft.color565(sinWave[c%360],sinWave[(c+120)%360],sinWave[(c+240)%360]));
-			delay(150);
+			delay(25);
 		}
 	return 0;
 }
