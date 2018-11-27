@@ -72,7 +72,7 @@ int main()
 		// FIXME snek.Increase();
 		}
 		tft.fillCircle(apple.aX, apple.aY, s/2, tft.color565(sinWave[c%360],sinWave[(c+120)%360],sinWave[(c+240)%360]));
-			delay(25);
+			delay(150);
 		}
 	return 0;
 }

@@ -26,13 +26,20 @@ uint8_t Controller::getDirection()
 
     int x = analogRead(pinX) - middleX;
     int y = analogRead(pinY) - middleY;
-    uint16_t mag = sqrt(x*x + y*y);
+    Serial.println("x");
+    Serial.println(x);
+    Serial.println("y");
+    Serial.println(y);
+    int mag = sqrt(sq(x) + sq(y));
     float angle;
     angle = atan2(-y,x)*(180.0/PI);
 
     char c;
-    if ( mag < deadZone)
+    Serial.println("Mag");
+    Serial.println(mag);
+    if ( mag < int(deadZone))
     {
+        Serial.println("Dead");
         return lastMove;
     }
     else if ((lastMove != DOWN) && (angle >= 45 && angle <= 135))
