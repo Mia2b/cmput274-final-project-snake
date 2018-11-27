@@ -13,18 +13,22 @@ class Snake
             uint8_t x;
             uint8_t y;
         };
-        Snake(uint8_t x, uint8_t y, uint16_t w, uint16_t h);
+        Snake(uint8_t x, uint8_t y, uint16_t startLen);
         void update();
         coordinates getCords();
         coordinates getEnd();
-        bool isInHistory(uint16_t x, uint16_t y);
+        bool lives();
+        void kill();
+        void grow(uint16_t growLength);
+        void shrink(uint16_t shrinkLength);
+        uint16_t getLength();
     private:
         coordinates cords;
         void move(uint8_t direction);
         Controller controller = Controller(A0,A1,13);
         Crumb moveHistory;
         uint16_t length;
-    
+        bool isAlive;
 };
 #endif
 
