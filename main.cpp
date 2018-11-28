@@ -15,6 +15,7 @@
 #include "Controller.h"
 #include "sinWave.h"
 #include "Map.h"
+#include "Coordinates.h"
 #include "MemoryFree.h" // https://playground.arduino.cc/Code/AvailableMemory
 
 //#include "apples.h"
@@ -47,7 +48,7 @@ int main()
   	init();
   	setup();
 	Map map;
-	Snake snek = Snake(8,8, 64);
+	Snake snek = Snake(8,8, 100);
 	int s = 6;
 	int c = 0;
 	
@@ -72,15 +73,15 @@ int main()
 		tft.fillRect(3, i*s+23, s, s, tft.color565(255,255*(i&1),255));
 	}
 	*/
-	Snake::coordinates cords;
-	Snake::coordinates endCord;
+	Coordinates cords;
+	Coordinates endCord;
   	while(snek.lives())
   	{
 		  tft.fillRect(25*s+3, 25*s+23, s, s, ILI9341_WHITE);
 		snek.update();
 		cords = snek.getCords();
 		endCord = snek.getEnd();
-		if (map.isOutOfBounds(cords.x, cords.y) || map.isMarked(cords.x,cords.y))
+		if (map.isOutOfBounds(cords) || map.isMarked(cords))
 		{
 			snek.kill();
 			delay(500);
@@ -90,26 +91,35 @@ int main()
 				snek.shrink(1);
 				endCord = snek.getEnd();
 				tft.fillRect(endCord.x*s+3, endCord.y*s+23, s, s, ILI9341_BLACK);
-				delay(abs(75-(snek.getLength()/5)));
+				int timeDelay = abs(100-(snek.getLength()>>2));
+				if (timeDelay>5)
+				{
+					delay(timeDelay);
+				}	
+				else
+				{
+					delay(0);
+				}
+						
 			}
 		}
 		else
 		{
 			if (cords.x == 25 && cords.y == 25)
 			{
-				snek.grow(6);
+				snek.grow(2);
 			}
-
-			map.addMark(cords.x,cords.y);
-			map.removeMark(endCord.x,endCord.y);
+			map.addMark(cords);
+			map.removeMark(endCord);
 			tft.fillRect(cords.x*s+3, cords.y*s+23, s, s, tft.color565(255-sqrt((cords.y%Y_BOUND)*s*0.8f*(cords.x%X_BOUND)*s*1.0666f),(cords.y%Y_BOUND)*s*0.8f,(cords.x%X_BOUND)*s*1.0666f));
 			tft.fillRect(endCord.x*s+3, endCord.y*s+23, s, s, ILI9341_BLACK);
 		}
 		
-
+		/*
 		Serial.print("freeMemory()=");
     	Serial.println(freeMemory());
-
+		*/
+		
 		c++;
 		c %= 360;
 
@@ -125,7 +135,15 @@ int main()
 			
 		}
 		*/
-		delay(abs(100-(snek.getLength()/5)));
+		int timeDelay = abs(100-(snek.getLength()>>2));
+		if (timeDelay>25)
+		{
+			delay(timeDelay);
+		}	
+		else
+		{
+			delay(25);
+		}
 	}
 	return 0;
 }

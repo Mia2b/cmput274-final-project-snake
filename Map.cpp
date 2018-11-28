@@ -13,22 +13,22 @@ Map::Map()
     mask = 1;
 }
 
-void Map::addMark(uint8_t x, uint8_t y)
+void Map::addMark(Coordinates cord)
 {
-    grid[x] |= mask<<y;
+    grid[cord.x] |= mask<<cord.y;
 }
 
-void Map::removeMark(uint8_t x, uint8_t y)
+void Map::removeMark(Coordinates cord)
 {
-    grid[x] &= ~(mask<<y);
+    grid[cord.x] &= ~(mask<<cord.y);
 }
 
-bool Map::isMarked(uint8_t x, uint8_t y)
+bool Map::isMarked(Coordinates cord)
 {
-    return (((grid[x]>>y) & 1)?true:false);
+    return (((grid[cord.x]>>cord.y) & 1)?true:false);
 }
 
-bool Map::isOutOfBounds(uint8_t x, uint8_t y)
+bool Map::isOutOfBounds(Coordinates cord)
 {
-    return (x >= X_BOUND || y >= Y_BOUND);
+    return (cord.x >= X_BOUND || cord.y >= Y_BOUND);
 }
