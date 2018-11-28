@@ -1,8 +1,6 @@
-/* #include "Arduino.h"
-#include "Snake.h"
-#include "apples.h"
+#include "Apples.h"
 
-
+/*
 void apples::makeCoord(screenWidth, screenLength) {
 
     appleCurrent.aX = random(0, screenWidth);
