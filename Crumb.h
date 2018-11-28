@@ -12,7 +12,7 @@ class Crumb
         uint16_t length;
         uint16_t storageSize;
         bool lengthChanged;
-        uint64_t moves[65]; // Will be able to store n * 32 moves
+        uint64_t moves[84]; // Will be able to store n * 32 moves
 
 };
 

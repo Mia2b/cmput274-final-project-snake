@@ -14,6 +14,7 @@ Snake::Snake(uint8_t x, uint8_t y, uint16_t startLen)
     cords.y = y;
     length = startLen;
     isAlive = true;
+    hasGrown = true;
     moveHistory.setLength(length+1);
 }
 
@@ -35,12 +36,14 @@ void Snake::update()
 void Snake::grow(uint16_t growLength)
 {
     length+= growLength;
+    hasGrown = true;
     moveHistory.setLength(length+1);
 }
 
 void Snake::shrink(uint16_t shrinkLength)
 {
     length-= shrinkLength;
+    hasGrown = true;
     moveHistory.setLength(length+1);
 }
 
@@ -59,22 +62,37 @@ void Snake::move(uint8_t direction)
     moveHistory.insert(direction);
 }
 
-Snake::coordinates Snake::getCords()
+Coordinates Snake::getCords()
 {
     return cords;
 }
 
-Snake::coordinates Snake::getEnd()
+Coordinates Snake::getEnd()
 {
-    coordinates endSeg = cords;
-    for (uint16_t i = 0 ; i < length; i++)
+    Coordinates endSeg;
+    if (hasGrown)
     {
-        //Serial.println(history0);
-        uint8_t direction = moveHistory.getMove(i)^3;
-        if (direction == UP) endSeg.y--;
-        else if (direction == RIGHT) endSeg.x++;
-        else if (direction == LEFT) endSeg.x--;
-        else if (direction == DOWN) endSeg.y++;
+        endSeg = cords;
+        for (uint16_t i = 0 ; i < length; i++)
+        {
+            //Serial.println(history0);
+            uint8_t direction = moveHistory.getMove(i)^3;
+            if (direction == UP) endSeg.y--;
+            else if (direction == RIGHT) endSeg.x++;
+            else if (direction == LEFT) endSeg.x--;
+            else if (direction == DOWN) endSeg.y++;
+        }
+        hasGrown = false;
     }
+    else
+    {
+        endSeg = lastEnd;
+        uint8_t direction = moveHistory.getMove(length);
+        if (direction == UP) endSeg.y--;
+            else if (direction == RIGHT) endSeg.x++;
+            else if (direction == LEFT) endSeg.x--;
+            else if (direction == DOWN) endSeg.y++;
+    }
+    lastEnd = endSeg;
     return endSeg;
 }
