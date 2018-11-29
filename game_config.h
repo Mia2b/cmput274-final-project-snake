@@ -6,5 +6,6 @@
 #define SD_CS 46
 #define APPLE_COUNT 4
 #define SCALE 6
+#define RADIUS 3
 
 #endif

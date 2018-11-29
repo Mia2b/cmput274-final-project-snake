@@ -7,7 +7,7 @@
 /////////////////////////////////////////////////////////////////////////////
 #include <Arduino.h>
 #include <SPI.h>	
-#include <SD.h>
+#include <avr/eeprom.h>
 #include "PDQ_GFX.h"			// PDQ: Core graphics library
 #include "PDQ_ILI9341_config.h"	// PDQ: ILI9341 pins and other setup for this sketch
 #include "PDQ_ILI9341.h"		// PDQ: Hardware-specific driver library 
@@ -25,6 +25,11 @@
 PDQ_ILI9341 tft;			// PDQ: create LCD object (using pins in "PDQ_ILI9341_config.h")
 const int WIDTH = tft.width();	// should be 240
 const int HEIGHT = tft.height(); // should be 320
+
+struct dataBus
+{
+	int highScore;
+};
 
 void flashDeath()
 {
@@ -68,29 +73,38 @@ void drawBoard()
 	tft.drawRect(2,HEIGHT-(Y_BOUND+1)*6+2,WIDTH-4,(Y_BOUND+1)*6-4, ILI9341_WHITE);
 }
 
+void printPadded(uint32_t v, uint16_t width)
+{
+	// Based on Adafruit ILI9341 graphics test example
+	char str[32] = { 0 };
+	sprintf(str, "%lu", v);
+	while (strlen(str) < width)
+	{
+		memmove(str+1, str, strlen(str)+1);
+		*str = '0';
+	}
+	tft.print(str);
+}
+
+
 void displayScore()
 {
 	tft.setCursor(5, 5);
 	tft.setTextSize(2);
 	tft.setTextColor(ILI9341_WHITE);
-	tft.print("%f",11101);
+	printPadded(1234,9);
 }
 void displayHighscore()
 {
 	tft.setCursor(128, 5);
 	tft.setTextSize(2);
 	tft.setTextColor(ILI9341_WHITE);
-	tft.println(F("999999999"));
+	printPadded(999999999,9);
 }
 
 void setup()
 {
 	Serial.begin(9600);
-	if (!SD.begin(SD_CS))
-	{
-		tft.fillScreen(ILI9341_RED);
-		delay(2500);
- 	}
   	tft.begin();			// initialize LCD
   	drawBoard();
 }
