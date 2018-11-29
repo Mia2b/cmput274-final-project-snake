@@ -115,10 +115,13 @@ void runGame()
 	Coordinates cords;
 	Coordinates endCord;
 	Map appleMap;
-	uint8_t points = 0;
+	uint16_t points = 0;
+	randomSeed(analogRead(A14));
 	for (uint8_t i = 0; i < APPLE_COUNT; i++)
 	{
-		Apple apl = bunch[i];
+
+
+		Apple &apl = bunch[i];
 		apl.cord.x = random(0, X_BOUND);
 		apl.cord.y = random(0, Y_BOUND);
 		apl.phaseShift = random(0, 360);
@@ -128,8 +131,12 @@ void runGame()
 			apl.cord.y = random(0, Y_BOUND);
 		}
 		appleMap.addMark(apl.cord);
-		tft.fillCircle((apl.cord.x)*SCALE + RADIUS, (apl.cord.y)*SCALE + RADIUS, RADIUS, tft.color565(sinWave[apl.phaseShift], sinWave[apl.phaseShift], sinWave[apl.phaseShift]));
 	}
+	for (uint8_t i = 0; i < APPLE_COUNT; i++)
+	{
+		Apple apl = bunch[i];
+		Serial.println(apl.cord.x);
+	} 
 	displayScore();
 	displayHighscore();
 	int cycle = 0;
@@ -138,7 +145,6 @@ void runGame()
 		cycle++;
 		Serial.print("freeMemory()=");
     	Serial.println(freeMemory());
-		tft.fillRect(25*SCALE+3, 25*SCALE+23, SCALE, SCALE, ILI9341_WHITE);
 		snek.update();
 		cords = snek.getCords();
 		endCord = snek.getEnd();
@@ -167,7 +173,6 @@ void runGame()
 		}
 		else
 		{
-			//if (cords.x == 25 && cords.y == 25)
 			if (appleMap.isMarked(cords))
 			{
 				snek.grow(3);
@@ -175,7 +180,7 @@ void runGame()
 
 				for (uint8_t i=0; i < APPLE_COUNT; i++)
 				{
-					Apple apl = bunch[i];
+					Apple &apl = bunch[i];
 					if (apl.cord.x == cords.x && apl.cord.y == cords.y)
 					{
 						while(snakeMap.isMarked(apl.cord) || appleMap.isMarked(apl.cord) || (apl.cord.x == cords.x && apl.cord.y == cords.y))
@@ -189,13 +194,17 @@ void runGame()
 					}
 				}
 			}
+			
+			snakeMap.addMark(cords);
+			snakeMap.removeMark(endCord);
+
+
 			for (uint8_t i = 0; i < APPLE_COUNT; i++)
 			{
 				Apple apl = bunch[i];
-				tft.fillCircle((apl.cord.x)*SCALE + RADIUS, (apl.cord.y)*SCALE + RADIUS, RADIUS, tft.color565(sinWave[(apl.phaseShift+cycle)%360], sinWave[(apl.phaseShift+cycle+120)%360], sinWave[(apl.phaseShift+cycle+240)%360]));
+				int p = apl.phaseShift;
+				tft.fillRect((apl.cord.x)*SCALE+3, (apl.cord.y)*SCALE+23, SCALE, SCALE , tft.color565(sinWave[(p+cycle)%360], sinWave[(p+cycle+120)%360], sinWave[(p+cycle+240)%360]));
 			}
-			snakeMap.addMark(cords);
-			snakeMap.removeMark(endCord);
 
 			tft.fillRect(cords.x*SCALE+3, cords.y*SCALE+23, SCALE, SCALE,\
 			tft.color565(255-sqrt((cords.y%Y_BOUND)*SCALE*0.8f*(cords.x%X_BOUND)*SCALE*1.0666f), (cords.y%Y_BOUND)*SCALE*0.8f, (cords.x%X_BOUND)*SCALE*1.0666f));
@@ -210,10 +219,10 @@ void runGame()
 			{
 				delay(25);
 			}
+			cycle++;
+			cycle%=360;
 		}
 	}
-
-	tft.fillScreen(ILI9341_BLACK);
 	//while()
 	///{
 		
