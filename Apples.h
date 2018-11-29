@@ -10,6 +10,6 @@ struct Apple
     uint16_t phaseShift;
 };
 uint8_t apples = 0;
-Apple bunch[8];
+Apple bunch[APPLE_COUNT];
 
 #endif
