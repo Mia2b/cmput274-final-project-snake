@@ -19,8 +19,7 @@
 #include "Coordinates.h"
 
 #include "MemoryFree.h" // https://playground.arduino.cc/Code/AvailableMemory
-
-//#include "apples.h"
+#include "Apples.h"
 
 PDQ_ILI9341 tft;			// PDQ: create LCD object (using pins in "PDQ_ILI9341_config.h")
 const int WIDTH = tft.width();	// should be 240
@@ -115,10 +114,28 @@ void runGame()
 	Snake snek = Snake(X_BOUND>>1,Y_BOUND>>1,3);
 	Coordinates cords;
 	Coordinates endCord;
+	Map appleMap;
+	uint8_t points = 0;
+	for (uint8_t i = 0; i < APPLE_COUNT; i++)
+	{
+		Apple apl = bunch[i];
+		apl.cord.x = random(0, X_BOUND);
+		apl.cord.y = random(0, Y_BOUND);
+		apl.phaseShift = random(0, 360);
+		while (snakeMap.isMarked(apl.cord) || appleMap.isMarked(apl.cord))
+		{
+			apl.cord.x = random(0, X_BOUND);
+			apl.cord.y = random(0, Y_BOUND);
+		}
+		appleMap.addMark(apl.cord);
+		tft.fillCircle((apl.cord.x)*SCALE + RADIUS, (apl.cord.y)*SCALE + RADIUS, RADIUS, tft.color565(sinWave[apl.phaseShift], sinWave[apl.phaseShift], sinWave[apl.phaseShift]));
+	}
 	displayScore();
 	displayHighscore();
+	int cycle = 0;
   	while(snek.lives())
   	{
+		cycle++;
 		Serial.print("freeMemory()=");
     	Serial.println(freeMemory());
 		tft.fillRect(25*SCALE+3, 25*SCALE+23, SCALE, SCALE, ILI9341_WHITE);
@@ -150,9 +167,32 @@ void runGame()
 		}
 		else
 		{
-			if (cords.x == 25 && cords.y == 25)
+			//if (cords.x == 25 && cords.y == 25)
+			if (appleMap.isMarked(cords))
 			{
-				snek.grow(2);
+				snek.grow(3);
+				appleMap.removeMark(cords);
+
+				for (uint8_t i=0; i < APPLE_COUNT; i++)
+				{
+					Apple apl = bunch[i];
+					if (apl.cord.x == cords.x && apl.cord.y == cords.y)
+					{
+						while(snakeMap.isMarked(apl.cord) || appleMap.isMarked(apl.cord) || (apl.cord.x == cords.x && apl.cord.y == cords.y))
+						{
+							apl.cord.x = random(0, X_BOUND);
+							apl.cord.y = random(0, Y_BOUND);
+						}
+						points = sinWave[(apl.phaseShift+cycle)%360];
+						apl.phaseShift = random(0, 360);
+						appleMap.addMark(apl.cord);
+					}
+				}
+			}
+			for (uint8_t i = 0; i < APPLE_COUNT; i++)
+			{
+				Apple apl = bunch[i];
+				tft.fillCircle((apl.cord.x)*SCALE + RADIUS, (apl.cord.y)*SCALE + RADIUS, RADIUS, tft.color565(sinWave[(apl.phaseShift+cycle)%360], sinWave[(apl.phaseShift+cycle+120)%360], sinWave[(apl.phaseShift+cycle+240)%360]));
 			}
 			snakeMap.addMark(cords);
 			snakeMap.removeMark(endCord);
@@ -172,6 +212,12 @@ void runGame()
 			}
 		}
 	}
+
+	tft.fillScreen(ILI9341_BLACK);
+	//while()
+	///{
+		
+	//}
 	//respawnScreen();
 	
 	delay(2500);
