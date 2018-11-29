@@ -27,8 +27,8 @@ const int HEIGHT = tft.height(); // should be 320
 
 struct dataBus
 {
-	int highScore;
-};
+	uint32_t highScore[5];
+}topScores;
 
 void flashDeath()
 {
@@ -86,19 +86,19 @@ void printPadded(uint32_t v, uint16_t width)
 }
 
 
-void displayScore()
+void displayScore(uint32_t score ,uint16_t color)
 {
 	tft.setCursor(5, 5);
 	tft.setTextSize(2);
-	tft.setTextColor(ILI9341_WHITE);
-	printPadded(1234,9);
+	tft.setTextColor(color);
+	printPadded(score,9);
 }
-void displayHighscore()
+void displayHighscore(uint16_t color)
 {
 	tft.setCursor(128, 5);
 	tft.setTextSize(2);
-	tft.setTextColor(ILI9341_WHITE);
-	printPadded(999999999,9);
+	tft.setTextColor(color);
+	printPadded(topScores.highScore[0],9);
 }
 
 void setup()
@@ -108,6 +108,8 @@ void setup()
   	drawBoard();
 }
 
+uint32_t score = 0;
+
 void runGame()
 {
 	Map snakeMap;
@@ -115,7 +117,6 @@ void runGame()
 	Coordinates cords;
 	Coordinates endCord;
 	Map appleMap;
-	uint16_t points = 0;
 	randomSeed(analogRead(A14));
 	for (uint8_t i = 0; i < APPLE_COUNT; i++)
 	{
@@ -137,21 +138,46 @@ void runGame()
 		Apple apl = bunch[i];
 		Serial.println(apl.cord.x);
 	} 
-	displayScore();
-	displayHighscore();
+	displayScore(score,ILI9341_BLACK);
+	score = 0;
+	displayScore(score,ILI9341_WHITE);
+	displayHighscore(ILI9341_WHITE);
 	int cycle = 0;
+
+
+	struct rgb
+	{
+		int16_t r;
+		int16_t g;
+		int16_t b;
+	};
+	rgb srgb;	// Snake rgb values 
+	rgb argb;	// Apple rgb values
+	rgb drgb;	// Delta rgb values
   	while(snek.lives())
   	{
-		cycle++;
+		/*
 		Serial.print("freeMemory()=");
     	Serial.println(freeMemory());
+		*/
 		snek.update();
 		cords = snek.getCords();
 		endCord = snek.getEnd();
+		srgb.g = (cords.y%Y_BOUND)*SCALE*0.8f;
+		srgb.b = (cords.x%X_BOUND)*SCALE*1.0666f;
+		srgb.r = 255-sqrt(srgb.g*srgb.b);
+		
 		if (snakeMap.isOutOfBounds(cords) || snakeMap.isMarked(cords))
 		{
-			flashDeath();
 			snek.kill();
+			
+			for (uint8_t i = 0; i < APPLE_COUNT; i++)
+			{
+				Apple apl = bunch[i];
+				tft.fillRect((apl.cord.x)*SCALE+3, (apl.cord.y)*SCALE+23, SCALE, SCALE , ILI9341_BLACK);
+			}
+			flashDeath();
+			
 			delay(500);
 			tft.fillRect(endCord.x*SCALE+3, endCord.y*SCALE+23, SCALE, SCALE, ILI9341_BLACK);
 			while (snek.getLength() > 1)
@@ -166,15 +192,20 @@ void runGame()
 				}	
 				else
 				{
-					delay(3);
+					delay(5);
 				}
 						
 			}
 		}
 		else
 		{
+			snakeMap.addMark(cords);
+			snakeMap.removeMark(endCord);
+
+
 			if (appleMap.isMarked(cords))
 			{
+				displayScore(score, ILI9341_BLACK);
 				snek.grow(3);
 				appleMap.removeMark(cords);
 
@@ -183,31 +214,38 @@ void runGame()
 					Apple &apl = bunch[i];
 					if (apl.cord.x == cords.x && apl.cord.y == cords.y)
 					{
-						while(snakeMap.isMarked(apl.cord) || appleMap.isMarked(apl.cord) || (apl.cord.x == cords.x && apl.cord.y == cords.y))
+						while(snakeMap.isMarked(apl.cord) || appleMap.isMarked(apl.cord))
 						{
 							apl.cord.x = random(0, X_BOUND);
 							apl.cord.y = random(0, Y_BOUND);
 						}
-						points = sinWave[(apl.phaseShift+cycle)%360];
+						argb.r = sinWave[(apl.phaseShift+cycle)%360];
+						argb.g = sinWave[(apl.phaseShift+cycle+120)%360];
+						argb.b =  sinWave[(apl.phaseShift+cycle+240)%360];
+
+						drgb.r = 256-abs(argb.r - srgb.r);
+						drgb.g = 256-abs(argb.g - srgb.g);
+						drgb.b = 256-abs(argb.b - srgb.b);
+
+						score += pow(((snek.getLength())*drgb.r*drgb.g*drgb.b),1);
 						apl.phaseShift = random(0, 360);
 						appleMap.addMark(apl.cord);
 					}
 				}
+				displayScore(score, ILI9341_WHITE);
 			}
-			
-			snakeMap.addMark(cords);
-			snakeMap.removeMark(endCord);
-
 
 			for (uint8_t i = 0; i < APPLE_COUNT; i++)
 			{
 				Apple apl = bunch[i];
-				int p = apl.phaseShift;
-				tft.fillRect((apl.cord.x)*SCALE+3, (apl.cord.y)*SCALE+23, SCALE, SCALE , tft.color565(sinWave[(p+cycle)%360], sinWave[(p+cycle+120)%360], sinWave[(p+cycle+240)%360]));
+				argb.r = sinWave[(apl.phaseShift+cycle)%360];
+				argb.g = sinWave[(apl.phaseShift+cycle+120)%360];
+				argb.b =  sinWave[(apl.phaseShift+cycle+240)%360];
+				tft.fillRect((apl.cord.x)*SCALE+3, (apl.cord.y)*SCALE+23, SCALE, SCALE , tft.color565(argb.r, argb.g, argb.b));
 			}
 
 			tft.fillRect(cords.x*SCALE+3, cords.y*SCALE+23, SCALE, SCALE,\
-			tft.color565(255-sqrt((cords.y%Y_BOUND)*SCALE*0.8f*(cords.x%X_BOUND)*SCALE*1.0666f), (cords.y%Y_BOUND)*SCALE*0.8f, (cords.x%X_BOUND)*SCALE*1.0666f));
+			tft.color565(srgb.r, srgb.g, srgb.b));
 			
 			tft.fillRect(endCord.x*SCALE+3, endCord.y*SCALE+23, SCALE, SCALE, ILI9341_BLACK);
 			int timeDelay = abs(100-(snek.getLength()>>2));
@@ -219,17 +257,31 @@ void runGame()
 			{
 				delay(25);
 			}
-			cycle++;
+			cycle+=2;
 			cycle%=360;
 		}
 	}
+	bool waitingForContinue = false;//true;
+	while(waitingForContinue)
+	{
+		//button press or somthing
+	}
+	if (score > topScores.highScore[0])
+	{
+		displayHighscore(ILI9341_BLACK);
+		topScores.highScore[0] = score;
+		displayHighscore(ILI9341_WHITE);
+	}
+
+
+	delay(2500);
 	//while()
 	///{
 		
 	//}
 	//respawnScreen();
 	
-	delay(2500);
+	
 	
 
 }
