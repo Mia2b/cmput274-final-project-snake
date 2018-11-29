@@ -106,6 +106,7 @@ void setup()
 	Serial.begin(9600);
   	tft.begin();			// initialize LCD
   	drawBoard();
+	eeprom_read_block((void*)&topScores, (void*)0, sizeof(topScores));
 }
 
 uint32_t score = 0;
@@ -268,8 +269,10 @@ void runGame()
 	}
 	if (score > topScores.highScore[0])
 	{
+		
 		displayHighscore(ILI9341_BLACK);
 		topScores.highScore[0] = score;
+		eeprom_write_block((const void*)&topScores, (void*)0, sizeof(topScores));
 		displayHighscore(ILI9341_WHITE);
 	}
 
