@@ -2,14 +2,14 @@
 #define apples_h
 #include <Arduino.h>
 #include "Coordinates.h"
+#include "game_config.h"
 
-class Apples
+struct Apple
 {
-    public:
-        Apples();
-        Coordinates location;
-        uint8_t eatLocation(Coordinates cord);
-    private:
+    Coordinates cord;
+    uint16_t phaseShift;
 };
+uint8_t apples = 0;
+Apple bunch[8];
 
 #endif

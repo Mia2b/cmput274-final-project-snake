@@ -48,7 +48,7 @@ int main()
   	init();
   	setup();
 	Map map;
-	Snake snek = Snake(8,8, 100);
+	Snake snek = Snake(X_BOUND>>1,Y_BOUND>>1,3);
 	int s = 6;
 	int c = 0;
 	
@@ -83,6 +83,42 @@ int main()
 		endCord = snek.getEnd();
 		if (map.isOutOfBounds(cords) || map.isMarked(cords))
 		{
+			tft.drawRect(0,0,WIDTH,HEIGHT, ILI9341_RED);
+		tft.drawRect(1,1,WIDTH-2,HEIGHT-2, ILI9341_RED);
+		tft.drawRect(2,2,WIDTH-4,HEIGHT-4, ILI9341_RED);
+
+		tft.drawRect(0,HEIGHT-(Y_BOUND+1)*6,WIDTH,(Y_BOUND+1)*6, ILI9341_RED);
+		tft.drawRect(1,HEIGHT-(Y_BOUND+1)*6+1,WIDTH-2,(Y_BOUND+1)*6-2, ILI9341_RED);
+		tft.drawRect(2,HEIGHT-(Y_BOUND+1)*6+2,WIDTH-4,(Y_BOUND+1)*6-4, ILI9341_RED);
+
+		delay(100);
+
+		tft.drawRect(0,0,WIDTH,HEIGHT, ILI9341_WHITE);
+		tft.drawRect(1,1,WIDTH-2,HEIGHT-2, ILI9341_WHITE);
+		tft.drawRect(2,2,WIDTH-4,HEIGHT-4, ILI9341_WHITE);
+
+		tft.drawRect(0,HEIGHT-(Y_BOUND+1)*6,WIDTH,(Y_BOUND+1)*6, ILI9341_WHITE);
+		tft.drawRect(1,HEIGHT-(Y_BOUND+1)*6+1,WIDTH-2,(Y_BOUND+1)*6-2, ILI9341_WHITE);
+		tft.drawRect(2,HEIGHT-(Y_BOUND+1)*6+2,WIDTH-4,(Y_BOUND+1)*6-4, ILI9341_WHITE);
+		delay(25);
+			tft.drawRect(0,0,WIDTH,HEIGHT, ILI9341_RED);
+		tft.drawRect(1,1,WIDTH-2,HEIGHT-2, ILI9341_RED);
+		tft.drawRect(2,2,WIDTH-4,HEIGHT-4, ILI9341_RED);
+
+		tft.drawRect(0,HEIGHT-(Y_BOUND+1)*6,WIDTH,(Y_BOUND+1)*6, ILI9341_RED);
+		tft.drawRect(1,HEIGHT-(Y_BOUND+1)*6+1,WIDTH-2,(Y_BOUND+1)*6-2, ILI9341_RED);
+		tft.drawRect(2,HEIGHT-(Y_BOUND+1)*6+2,WIDTH-4,(Y_BOUND+1)*6-4, ILI9341_RED);
+
+		delay(100);
+
+		tft.drawRect(0,0,WIDTH,HEIGHT, ILI9341_WHITE);
+		tft.drawRect(1,1,WIDTH-2,HEIGHT-2, ILI9341_WHITE);
+		tft.drawRect(2,2,WIDTH-4,HEIGHT-4, ILI9341_WHITE);
+
+		tft.drawRect(0,HEIGHT-(Y_BOUND+1)*6,WIDTH,(Y_BOUND+1)*6, ILI9341_WHITE);
+		tft.drawRect(1,HEIGHT-(Y_BOUND+1)*6+1,WIDTH-2,(Y_BOUND+1)*6-2, ILI9341_WHITE);
+		tft.drawRect(2,HEIGHT-(Y_BOUND+1)*6+2,WIDTH-4,(Y_BOUND+1)*6-4, ILI9341_WHITE);
+		delay(25);
 			snek.kill();
 			delay(500);
 			tft.fillRect(endCord.x*s+3, endCord.y*s+23, s, s, ILI9341_BLACK);
@@ -91,14 +127,14 @@ int main()
 				snek.shrink(1);
 				endCord = snek.getEnd();
 				tft.fillRect(endCord.x*s+3, endCord.y*s+23, s, s, ILI9341_BLACK);
-				int timeDelay = abs(100-(snek.getLength()>>2));
+				int timeDelay = abs(100-(snek.getLength()<<1));
 				if (timeDelay>5)
 				{
 					delay(timeDelay);
 				}	
 				else
 				{
-					delay(0);
+					delay(3);
 				}
 						
 			}
