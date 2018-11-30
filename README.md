@@ -4,7 +4,7 @@ The cmput 274 final project by Amir Hansen and Ralph Milford.
 
 ## Defualt Wiring Guide
 | __Arduino Mega__ | __Lcd dispaly__ |
-| :---             | :---            |
+| :--------------- | :-------------- |
 | GND              | GND             |
 | 5V               | Vin             |
 | Digital 52       | CLK             |
