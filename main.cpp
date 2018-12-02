@@ -106,7 +106,20 @@ void setup()
 	Serial.begin(9600);
   	tft.begin();			// initialize LCD
   	drawBoard();
-	eeprom_read_block((void*)&topScores, (void*)0, sizeof(topScores));
+	uint64_t check;
+	eeprom_read_block((void*)&check, (void*)0, 64);
+	if (check == 0x1a2b3c4d5e6f7890)
+	{
+		eeprom_read_block((void*)&topScores, (void*)0, sizeof(topScores));
+	}
+	else
+	{
+		topScores.highScore[0] = 0;
+		topScores.highScore[1] = 0;
+		topScores.highScore[2] = 0;
+		topScores.highScore[3] = 0;
+		topScores.highScore[4] = 0;
+	}
 }
 
 uint32_t score = 0;
@@ -262,11 +275,52 @@ void runGame()
 			cycle%=360;
 		}
 	}
-	bool waitingForContinue = false;//true;
+	uint8_t index = 5;
+	tft.setCursor(100, 20);
+	tft.setTextSize(2);
+	tft.setTextColor(ILI9341_WHITE);
+	tft.print("Press the Joystick to Continue");
+	for (int i = 0; i < 5; i++)
+	{
+		if (topScores.highScore[i] <= score)
+		{
+			topScores.highScore[i] = score;
+			index = i;
+		}
+		tft.setCursor(100, 40 + 20*i);
+		tft.setTextSize(2);
+		tft.setTextColor(ILI9341_WHITE);
+		printPadded(topScores.highScore[i], 0);
+	}
+	int joystickCur = controller.getButton();
+	int joystickOld = joystickCur;
+	bool waitingForContinue = true;
 	while(waitingForContinue)
 	{
-		//button press or somthing
+		joystickCur = controller.getButton();
+
+		if (index != 5)
+		{
+			tft.setCursor(100, 40 + 20*index);
+			tft.setTextSize(2);
+			tft.setTextColor(ILI9341_BLACK);
+			printPadded(score, 9);
+			delay(500);
+			tft.setTextColor(ILI9341_WHITE);
+			printPadded(score, 9);
+			delay(500);
+		}
+
+		if (joystickCur == HIGH && joystickOld == LOW)
+		{
+			waitingForContinue = false;
+		}
+		joystickOld = joystickCur;
 	}
+	uint64_t check = 0x1a2b3c4d5e6f7890;
+	eeprom_write_block((const void*)&check, (void*)0, 64);
+	eeprom_update_block((const void*)&topScores, (void*)0, sizeof(topScores));
+	/*
 	if (score > topScores.highScore[0])
 	{
 		
@@ -275,6 +329,7 @@ void runGame()
 		eeprom_write_block((const void*)&topScores, (void*)0, sizeof(topScores));
 		displayHighscore(ILI9341_WHITE);
 	}
+	*/
 
 
 	delay(2500);

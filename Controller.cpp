@@ -4,9 +4,14 @@ const uint8_t UP = 0;
 const uint8_t RIGHT = 1;
 const uint8_t LEFT = 2;
 const uint8_t DOWN = 3;
-
+const int joystickBtn = 2;
 //uint8_t = lastMoves;
 
+void Controller::Setup()
+{
+    pinMode(joystickBtn, INPUT);
+    digitalWrite(joystickBtn, HIGH);
+}
 
 Controller::Controller(uint8_t pinX, uint8_t pinY, uint8_t pinB)
 {
@@ -58,6 +63,13 @@ uint8_t Controller::getDirection()
     {   // NO INPUT
         return lastMove;
     }
+}
+
+int Controller::getButton()
+{
+    int state = digitalRead(joystickBtn);
+    return(state);
+}
 
    /*
     //The following is temp for testing
@@ -87,4 +99,4 @@ uint8_t Controller::getDirection()
             return lastMove;
         }
     */
-}
+
