@@ -13,10 +13,11 @@
 #include "PDQ_ILI9341.h"		// PDQ: Hardware-specific driver library 
 #include "game_config.h" 
 #include "Snake.h"
-#include "Controller.h"
 #include "sinWave.h"
 #include "Map.h"
 #include "Coordinates.h"
+#include "Button.h"
+
 
 #include "MemoryFree.h" // https://playground.arduino.cc/Code/AvailableMemory
 #include "Apples.h"
@@ -27,7 +28,8 @@ const int HEIGHT = tft.height(); // should be 320
 
 struct dataBus
 {
-	uint32_t highScore[5];
+	uint32_t highScore[10];
+	uint64_t check;
 }topScores;
 
 void flashDeath()
@@ -101,25 +103,33 @@ void displayHighscore(uint16_t color)
 	printPadded(topScores.highScore[0],9);
 }
 
+#define integrityCheck 0x1a2b3c4d5e6f789e
+
 void setup()
 {
 	Serial.begin(9600);
   	tft.begin();			// initialize LCD
   	drawBoard();
-	uint64_t check;
-	eeprom_read_block((void*)&check, (void*)0, 64);
-	if (check == 0x1a2b3c4d5e6f7890)
-	{
-		eeprom_read_block((void*)&topScores, (void*)0, sizeof(topScores));
+	
+	eeprom_read_block((void*)&topScores, (void*)0, sizeof(topScores));
+	if (topScores.check != integrityCheck)
+	{	
+
+		topScores.highScore[0] = 100000;
+		topScores.highScore[1] =  80000;
+		topScores.highScore[2] =  75000;
+		topScores.highScore[3] =  70000;
+		topScores.highScore[4] =  60000;
+		topScores.highScore[5] =  55555;
+		topScores.highScore[6] =   4444;
+		topScores.highScore[7] =    333;
+		topScores.highScore[8] =     22;
+		topScores.highScore[9] =      1;
+		topScores.check = integrityCheck;
+		eeprom_update_block((const void*)&topScores, (void*)0, sizeof(topScores));
 	}
-	else
-	{
-		topScores.highScore[0] = 0;
-		topScores.highScore[1] = 0;
-		topScores.highScore[2] = 0;
-		topScores.highScore[3] = 0;
-		topScores.highScore[4] = 0;
-	}
+	displayScore(0,ILI9341_WHITE);
+	displayHighscore(ILI9341_WHITE);
 }
 
 uint32_t score = 0;
@@ -131,6 +141,121 @@ void runGame()
 	Coordinates cords;
 	Coordinates endCord;
 	Map appleMap;
+	int cycle = 0;
+	struct rgb
+	{
+		int16_t r;
+		int16_t g;
+		int16_t b;
+	};
+	rgb srgb;	// Snake rgb values 
+	rgb argb;	// Apple rgb values
+	rgb drgb;	// Delta rgb values
+
+
+	uint8_t index = 123;
+	tft.setCursor(60, 34);
+	tft.setTextSize(4);
+	tft.setTextColor(ILI9341_WHITE);
+	tft.println("Snake");
+
+	
+	for (int i = 0; i < 10; i++)
+	{
+		if (topScores.highScore[i] <= score)
+		{
+			if (i == 0)
+			{
+				displayHighscore(ILI9341_BLACK);
+			}
+			for (int j = 9; j > i; j-- )
+			{
+				topScores.highScore[j] = topScores.highScore[j-1];
+			}
+			topScores.highScore[i] = score;
+			displayHighscore(ILI9341_WHITE);
+			index = i;
+			break;
+		}
+	}
+	eeprom_update_block((const void*)&topScores, (void*)0, sizeof(topScores));
+	
+	
+	cycle=100;
+	for (int i = 0; i < 10; i++)
+	{
+		argb.r = sinWave[(cycle)%360];
+		argb.g = sinWave[(cycle+120)%360];
+		argb.b =  sinWave[(cycle+240)%360];
+
+		tft.setCursor(64, 73 + 20*i);
+		tft.setTextSize(2);
+		tft.setTextColor( tft.color565(argb.r, argb.g, argb.b));
+		if (i == index)
+		{
+			tft.setTextColor(ILI9341_WHITE);
+		}
+		printPadded(topScores.highScore[i], 9);
+		cycle+=18;
+		cycle%=360;
+	}
+	
+
+	Button button = Button(A2);
+
+	bool waitingForContinue = true;
+
+	//tft.setCursor(64, 80 + 20*index);
+
+	while(waitingForContinue)
+	{
+		delay(5);
+		button.updateState();
+		argb.r = sinWave[(cycle)%360];
+		argb.g = sinWave[(cycle+120)%360];
+		argb.b =  sinWave[(cycle+240)%360];
+		uint16_t fade = argb.r;
+		if (index <= 10)
+		{
+			
+			tft.setCursor(64, 73 + 20*index);
+			tft.setTextSize(2);
+			tft.setTextColor(tft.color565(argb.r, argb.g, argb.b));
+			printPadded(score, 9);
+		}
+
+		tft.setCursor(23, 280);
+		tft.setTextColor(tft.color565(fade, fade, fade));
+		tft.setTextSize(2);
+		tft.println("<click to start>");
+		cycle+=5;
+		cycle%=360;
+		if (button.isTriggered())
+		{
+			waitingForContinue = false;
+		}
+	}
+
+	tft.setCursor(23, 280);
+	tft.setTextColor(ILI9341_BLACK);
+	tft.setTextSize(2);
+	tft.println("<click to start>");
+
+	tft.setCursor(60, 34);
+	tft.setTextSize(4);
+	tft.setTextColor(ILI9341_BLACK);
+	tft.println("Snake");
+
+
+	for (int i = 0; i < 10; i++)
+	{
+		tft.setCursor(64,73 + 20*i);
+		tft.setTextSize(2);
+		tft.setTextColor(ILI9341_BLACK);
+		printPadded(topScores.highScore[i], 9);
+	}
+	
+
 	randomSeed(analogRead(A14));
 	for (uint8_t i = 0; i < APPLE_COUNT; i++)
 	{
@@ -152,22 +277,11 @@ void runGame()
 		Apple apl = bunch[i];
 		Serial.println(apl.cord.x);
 	} 
+
 	displayScore(score,ILI9341_BLACK);
 	score = 0;
 	displayScore(score,ILI9341_WHITE);
-	displayHighscore(ILI9341_WHITE);
-	int cycle = 0;
 
-
-	struct rgb
-	{
-		int16_t r;
-		int16_t g;
-		int16_t b;
-	};
-	rgb srgb;	// Snake rgb values 
-	rgb argb;	// Apple rgb values
-	rgb drgb;	// Delta rgb values
   	while(snek.lives())
   	{
 		/*
@@ -275,73 +389,7 @@ void runGame()
 			cycle%=360;
 		}
 	}
-	uint8_t index = 5;
-	tft.setCursor(100, 20);
-	tft.setTextSize(2);
-	tft.setTextColor(ILI9341_WHITE);
-	tft.print("Press the Joystick to Continue");
-	for (int i = 0; i < 5; i++)
-	{
-		if (topScores.highScore[i] <= score)
-		{
-			topScores.highScore[i] = score;
-			index = i;
-		}
-		tft.setCursor(100, 40 + 20*i);
-		tft.setTextSize(2);
-		tft.setTextColor(ILI9341_WHITE);
-		printPadded(topScores.highScore[i], 0);
-	}
-	int joystickCur = controller.getButton();
-	int joystickOld = joystickCur;
-	bool waitingForContinue = true;
-	while(waitingForContinue)
-	{
-		joystickCur = controller.getButton();
-
-		if (index != 5)
-		{
-			tft.setCursor(100, 40 + 20*index);
-			tft.setTextSize(2);
-			tft.setTextColor(ILI9341_BLACK);
-			printPadded(score, 9);
-			delay(500);
-			tft.setTextColor(ILI9341_WHITE);
-			printPadded(score, 9);
-			delay(500);
-		}
-
-		if (joystickCur == HIGH && joystickOld == LOW)
-		{
-			waitingForContinue = false;
-		}
-		joystickOld = joystickCur;
-	}
-	uint64_t check = 0x1a2b3c4d5e6f7890;
-	eeprom_write_block((const void*)&check, (void*)0, 64);
-	eeprom_update_block((const void*)&topScores, (void*)0, sizeof(topScores));
-	/*
-	if (score > topScores.highScore[0])
-	{
-		
-		displayHighscore(ILI9341_BLACK);
-		topScores.highScore[0] = score;
-		eeprom_write_block((const void*)&topScores, (void*)0, sizeof(topScores));
-		displayHighscore(ILI9341_WHITE);
-	}
-	*/
-
-
-	delay(2500);
-	//while()
-	///{
-		
-	//}
-	//respawnScreen();
-	
-	
-	
-
+	delay(500);
 }
 
 int main()
