@@ -1,32 +1,23 @@
-#include "Controller.h"
+#include "AnalogStick.h"
 
 const uint8_t UP = 0;
 const uint8_t RIGHT = 1;
 const uint8_t LEFT = 2;
 const uint8_t DOWN = 3;
-const int joystickBtn = 2;
 //uint8_t = lastMoves;
 
-void Controller::Setup()
-{
-    pinMode(joystickBtn, INPUT);
-    digitalWrite(joystickBtn, HIGH);
-}
-
-Controller::Controller(uint8_t pinX, uint8_t pinY, uint8_t pinB)
+AnalogStick::AnalogStick(uint8_t pinX, uint8_t pinY)
 {
     /*Pin x and y must be analog for the joystick*/
     this->pinX = pinX;
     this->pinY = pinY;
-    this->pinB = pinB;
     pinMode(pinX, INPUT);
     pinMode(pinY, INPUT);
-    pinMode(pinB, INPUT_PULLUP);
     middleX = analogRead(pinX);
     middleY = analogRead(pinY);
 }
 
-uint8_t Controller::getDirection()
+uint8_t AnalogStick::getDirection()
 {
 
     int x = analogRead(pinX) - middleX;
@@ -63,12 +54,6 @@ uint8_t Controller::getDirection()
     {   // NO INPUT
         return lastMove;
     }
-}
-
-int Controller::getButton()
-{
-    int state = digitalRead(joystickBtn);
-    return(state);
 }
 
    /*
