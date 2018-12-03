@@ -5,13 +5,13 @@
 
 /*  These directions are used becuse the XOR of them gives the optosite 
     direction. */
-const uint8_t UP = 0;       // 00
-const uint8_t RIGHT = 1;    // 01
-const uint8_t LEFT = 2;     // 10
-const uint8_t DOWN = 3;     // 11
+const uint8_t UP = 0;    // 00
+const uint8_t RIGHT = 1; // 01
+const uint8_t LEFT = 2;  // 10
+const uint8_t DOWN = 3;  // 11
 
 Snake::Snake(uint8_t x, uint8_t y, uint16_t startLen)
-{   
+{
     /* Initialized the snake starting position... */
     cords.x = x;
     cords.y = y;
@@ -58,7 +58,7 @@ void Snake::shrink(uint16_t shrinkLength)
 }
 
 uint16_t Snake::getLength()
-{   
+{
     /* Get the snake length */
     return length;
 }
@@ -81,6 +81,7 @@ void Snake::move(uint8_t direction)
 
 Coordinates Snake::getCords()
 {
+    /* Returns the snake current possition */
     return cords;
 }
 
@@ -88,7 +89,7 @@ Coordinates Snake::getEnd()
 {
     Coordinates endSeg;
     if (hasGrown)
-    {   /* If the snake has grown, retrace the snakes crumb trail*/
+    { /* If the snake has grown, retrace the snakes crumb trail*/
         endSeg = cords;
         for (uint16_t i = 0; i < length; i++)
         {
