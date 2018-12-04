@@ -17,7 +17,7 @@ void Crumb::insert(uint8_t direction)
 {
     if (lengthChanged)
     {
-        storageSize = (length>>5) + 2;
+        storageSize = (length>>5) + 1;
         lengthChanged = false;
     }
     //Serial.println(storageSize);

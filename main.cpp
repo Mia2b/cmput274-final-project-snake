@@ -27,51 +27,31 @@ const int WIDTH = tft.width();	// should be 240
 const int HEIGHT = tft.height(); // should be 320
 
 struct dataBus
-{
+{	/* Data inside here is saved after each game/life */
 	uint32_t highScore[10];
 	uint64_t check;
 }topScores;
 
-void flashDeath()
+void drawFrame(uint16_t color)
 {
-	tft.drawRect(0,0,WIDTH,HEIGHT, ILI9341_RED);
-	tft.drawRect(1,1,WIDTH-2,HEIGHT-2, ILI9341_RED);
-	tft.drawRect(2,2,WIDTH-4,HEIGHT-4, ILI9341_RED);
-	tft.drawRect(0,HEIGHT-(Y_BOUND+1)*6,WIDTH,(Y_BOUND+1)*6, ILI9341_RED);
-	tft.drawRect(1,HEIGHT-(Y_BOUND+1)*6+1,WIDTH-2,(Y_BOUND+1)*6-2, ILI9341_RED);
-	tft.drawRect(2,HEIGHT-(Y_BOUND+1)*6+2,WIDTH-4,(Y_BOUND+1)*6-4, ILI9341_RED);
-	delay(100);
-	tft.drawRect(0,0,WIDTH,HEIGHT, ILI9341_WHITE);
-	tft.drawRect(1,1,WIDTH-2,HEIGHT-2, ILI9341_WHITE);
-	tft.drawRect(2,2,WIDTH-4,HEIGHT-4, ILI9341_WHITE);
-	tft.drawRect(0,HEIGHT-(Y_BOUND+1)*6,WIDTH,(Y_BOUND+1)*6, ILI9341_WHITE);
-	tft.drawRect(1,HEIGHT-(Y_BOUND+1)*6+1,WIDTH-2,(Y_BOUND+1)*6-2, ILI9341_WHITE);
-	tft.drawRect(2,HEIGHT-(Y_BOUND+1)*6+2,WIDTH-4,(Y_BOUND+1)*6-4, ILI9341_WHITE);
-	delay(25);
-	tft.drawRect(0,0,WIDTH,HEIGHT, ILI9341_RED);
-	tft.drawRect(1,1,WIDTH-2,HEIGHT-2, ILI9341_RED);
-	tft.drawRect(2,2,WIDTH-4,HEIGHT-4, ILI9341_RED);
-	tft.drawRect(0,HEIGHT-(Y_BOUND+1)*6,WIDTH,(Y_BOUND+1)*6, ILI9341_RED);
-	tft.drawRect(1,HEIGHT-(Y_BOUND+1)*6+1,WIDTH-2,(Y_BOUND+1)*6-2, ILI9341_RED);
-	tft.drawRect(2,HEIGHT-(Y_BOUND+1)*6+2,WIDTH-4,(Y_BOUND+1)*6-4, ILI9341_RED);
-	delay(100);
-	tft.drawRect(0,0,WIDTH,HEIGHT, ILI9341_WHITE);
-	tft.drawRect(1,1,WIDTH-2,HEIGHT-2, ILI9341_WHITE);
-	tft.drawRect(2,2,WIDTH-4,HEIGHT-4, ILI9341_WHITE);
-	tft.drawRect(0,HEIGHT-(Y_BOUND+1)*6,WIDTH,(Y_BOUND+1)*6, ILI9341_WHITE);
-	tft.drawRect(1,HEIGHT-(Y_BOUND+1)*6+1,WIDTH-2,(Y_BOUND+1)*6-2, ILI9341_WHITE);
-	tft.drawRect(2,HEIGHT-(Y_BOUND+1)*6+2,WIDTH-4,(Y_BOUND+1)*6-4, ILI9341_WHITE);
+	tft.drawRect(0,0,WIDTH,HEIGHT, color);
+	tft.drawRect(1,1,WIDTH-2,HEIGHT-2, color);
+	tft.drawRect(2,2,WIDTH-4,HEIGHT-4, color);
+	tft.drawRect(0,HEIGHT-(Y_BOUND+1)*6,WIDTH,(Y_BOUND+1)*6, color);
+	tft.drawRect(1,HEIGHT-(Y_BOUND+1)*6+1,WIDTH-2,(Y_BOUND+1)*6-2, color);
+	tft.drawRect(2,HEIGHT-(Y_BOUND+1)*6+2,WIDTH-4,(Y_BOUND+1)*6-4, color);
 }
 
-void drawBoard()
+void flashDeath()
 {
-	tft.fillScreen(ILI9341_BLACK);
-	tft.drawRect(0,0,WIDTH,HEIGHT, ILI9341_WHITE);
-	tft.drawRect(1,1,WIDTH-2,HEIGHT-2, ILI9341_WHITE);
-	tft.drawRect(2,2,WIDTH-4,HEIGHT-4, ILI9341_WHITE);
-	tft.drawRect(0,HEIGHT-(Y_BOUND+1)*6,WIDTH,(Y_BOUND+1)*6, ILI9341_WHITE);
-	tft.drawRect(1,HEIGHT-(Y_BOUND+1)*6+1,WIDTH-2,(Y_BOUND+1)*6-2, ILI9341_WHITE);
-	tft.drawRect(2,HEIGHT-(Y_BOUND+1)*6+2,WIDTH-4,(Y_BOUND+1)*6-4, ILI9341_WHITE);
+	/* Animation for flashing the screen red on death */
+	drawFrame(ILI9341_RED);
+	delay(100);
+	drawFrame(ILI9341_WHITE);
+	delay(25);
+	drawFrame(ILI9341_RED);
+	delay(100);
+	drawFrame(ILI9341_WHITE);
 }
 
 void printPadded(uint32_t v, uint16_t width)
@@ -103,28 +83,30 @@ void displayHighscore(uint16_t color)
 	printPadded(topScores.highScore[0],9);
 }
 
-#define integrityCheck 0x1a2b3c4d5e6f789e
+#define integrityCheck 0x1a2b3c4d5e6f789f
 
 void setup()
 {
 	Serial.begin(9600);
   	tft.begin();			// initialize LCD
-  	drawBoard();
+  	
+	tft.fillScreen(ILI9341_BLACK);
+	drawFrame(ILI9341_WHITE);
 	
 	eeprom_read_block((void*)&topScores, (void*)0, sizeof(topScores));
 	if (topScores.check != integrityCheck)
 	{	
 
-		topScores.highScore[0] = 100000;
+		topScores.highScore[0] = 500000;
 		topScores.highScore[1] =  80000;
 		topScores.highScore[2] =  75000;
 		topScores.highScore[3] =  70000;
 		topScores.highScore[4] =  60000;
-		topScores.highScore[5] =  55555;
-		topScores.highScore[6] =   4444;
-		topScores.highScore[7] =    333;
-		topScores.highScore[8] =     22;
-		topScores.highScore[9] =      1;
+		topScores.highScore[5] =  50000;
+		topScores.highScore[6] =   4000;
+		topScores.highScore[7] =   3000;
+		topScores.highScore[8] =   2000;
+		topScores.highScore[9] =   1000;
 		topScores.check = integrityCheck;
 		eeprom_update_block((const void*)&topScores, (void*)0, sizeof(topScores));
 	}
@@ -137,7 +119,7 @@ uint32_t score = 0;
 void runGame()
 {
 	Map snakeMap;
-	Snake snek = Snake(X_BOUND>>1,Y_BOUND>>1,3);
+	Snake snek = Snake(X_BOUND>>1,Y_BOUND>>1, 3);
 	Coordinates cords;
 	Coordinates endCord;
 	Map appleMap;
