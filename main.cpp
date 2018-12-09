@@ -28,8 +28,8 @@ const int HEIGHT = tft.height(); // should be 320
 
 struct dataBus
 {	/* Data inside here is saved after each game/life */
-	uint32_t highScore[10];
-	uint64_t check;
+	uint32_t highScore[10];  // The top 10 scores that has been reached
+	uint64_t check;  // A check to ensure that the proper vairables has been read
 }topScores;
 
 void drawFrame(uint16_t color)
@@ -83,7 +83,7 @@ void displayHighscore(uint16_t color)
 	printPadded(topScores.highScore[0],9);
 }
 
-#define integrityCheck 0x1a2b3c4d5e6f789f
+#define integrityCheck 0x1a2b3c4d5e6f789f  // The chosen variable that gets check every time the score is read from the Arduino
 
 void setup()
 {
@@ -93,8 +93,8 @@ void setup()
 	tft.fillScreen(ILI9341_BLACK);
 	drawFrame(ILI9341_WHITE);
 	
-	eeprom_read_block((void*)&topScores, (void*)0, sizeof(topScores));
-	if (topScores.check != integrityCheck)
+	eeprom_read_block((void*)&topScores, (void*)0, sizeof(topScores));  // Reads in the topscores from the Arduino
+	if (topScores.check != integrityCheck)  // If the integrity check fails sets highscores to predetermined numbers
 	{	
 
 		topScores.highScore[0] = 500000;
@@ -108,7 +108,7 @@ void setup()
 		topScores.highScore[8] =   2000;
 		topScores.highScore[9] =   1000;
 		topScores.check = integrityCheck;
-		eeprom_update_block((const void*)&topScores, (void*)0, sizeof(topScores));
+		eeprom_update_block((const void*)&topScores, (void*)0, sizeof(topScores));  // Writes these predetermined numbers to the Arduino to replace misssing highscores
 	}
 	displayScore(0,ILI9341_WHITE);
 	displayHighscore(ILI9341_WHITE);
@@ -122,7 +122,7 @@ void runGame()
 	Snake snek = Snake(X_BOUND>>1,Y_BOUND>>1, 3);
 	Coordinates cords;
 	Coordinates endCord;
-	Map appleMap;
+	Map appleMap;  // Creates the map to keep track of the apples
 	int cycle = 0;
 	struct rgb
 	{
@@ -238,20 +238,24 @@ void runGame()
 	}
 	
 
-	randomSeed(analogRead(A14));
-	for (uint8_t i = 0; i < APPLE_COUNT; i++)
+	randomSeed(analogRead(A14));  // Reads noise from an analog pin to change so that any random function will be different each time
+	for (uint8_t i = 0; i < APPLE_COUNT; i++)  // Creates the number of apples wanted based upon game_config.h
 	{
 
 
 		Apple &apl = bunch[i];
+		// Set each apple to random coordinate within the bounds of the screen
 		apl.cord.x = random(0, X_BOUND);
 		apl.cord.y = random(0, Y_BOUND);
+		// Gives each apple a unique value to randomize color and point value
 		apl.phaseShift = random(0, 360);
+		// Checks to make sure that apples are not on the snake itself or another apple
 		while (snakeMap.isMarked(apl.cord) || appleMap.isMarked(apl.cord))
 		{
 			apl.cord.x = random(0, X_BOUND);
 			apl.cord.y = random(0, Y_BOUND);
 		}
+		// Creates a new point on the map for apples
 		appleMap.addMark(apl.cord);
 	}
 	for (uint8_t i = 0; i < APPLE_COUNT; i++)
@@ -313,17 +317,20 @@ void runGame()
 			snakeMap.removeMark(endCord);
 
 
-			if (appleMap.isMarked(cords))
+			if (appleMap.isMarked(cords)) // Checks to see if the snake is currently on an apple
 			{
 				displayScore(score, ILI9341_BLACK);
 				snek.grow(3);
-				appleMap.removeMark(cords);
+				appleMap.removeMark(cords);  // The position of the apple that the snake is on is removed
 
+				// Runs through each apple in order to replace the one that the snake is on
 				for (uint8_t i=0; i < APPLE_COUNT; i++)
 				{
 					Apple &apl = bunch[i];
+					// Tests to see if the current apple is the one the snake is on
 					if (apl.cord.x == cords.x && apl.cord.y == cords.y)
 					{
+						// Replaces the apples coordinates until it's not either the snake or another apple
 						while(snakeMap.isMarked(apl.cord) || appleMap.isMarked(apl.cord))
 						{
 							apl.cord.x = random(0, X_BOUND);
@@ -339,7 +346,7 @@ void runGame()
 
 						score += pow(((snek.getLength())*drgb.r*drgb.g*drgb.b),1);
 						apl.phaseShift = random(0, 360);
-						appleMap.addMark(apl.cord);
+						appleMap.addMark(apl.cord);  // Adds the noew position of the apple
 					}
 				}
 				displayScore(score, ILI9341_WHITE);
