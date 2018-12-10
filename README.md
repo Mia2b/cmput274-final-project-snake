@@ -32,12 +32,12 @@ When the arduino is powered on a start screen should appear, if so then you have
 ## Game Rules
 
 * Collect apples to increase your score, length, and movement speed. Having your snake colour more closly match the apple colour will give you more points. 
-* * Points is calulated by `snakeLength*(rgbMax-rgbDelta)`
+** Points is calulated by `snakeLength*(rgbMax-rgbDelta)`
 * You may only turn 90 degree from your current direction
 * The game will end if you collide with yourself or with the game board boundarys
 * Only the top 10 high scores will be displayed on the start menue scores chart
-* * Only the highest score will be displayed in the top right of the screen
-* * The top left score is your current score
+** Only the highest score will be displayed in the top right of the screen
+** The top left score is your current score
 
  
 ## Notes
