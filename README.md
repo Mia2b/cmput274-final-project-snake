@@ -3,9 +3,6 @@
 ## Amir Hansen id: 1523209 
 ## Ralph Milford id: 1534131
 
-
-The cmput 274 final project by Amir Hansen and Ralph Milford.
-
 ## Defualt Wiring Guide
 | __Arduino Mega__ | __Lcd dispaly__ |
 | :--------------- | :-------------- |
