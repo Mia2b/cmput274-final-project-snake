@@ -1,7 +1,7 @@
 # Snake
-### Fall 2018 Cmput 274 Final Project
-## Amir Hansen id: 1523209 
-## Ralph Milford id: 1534131
+## Fall 2018 Cmput 274 Final Project
+##### Amir Hansen id: 1523209 
+##### Ralph Milford id: 1534131
 
 ## Defualt Wiring Guide
 | __Arduino Mega__ | __Lcd dispaly__ |
