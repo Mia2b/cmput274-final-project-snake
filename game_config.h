@@ -1,3 +1,13 @@
+/////////////////////////////////////////////////////////////////////////////
+// Name: Amir Hansen, Ralph Milford                                        //
+// ID: 1523209, 1534131                                                    //
+// CMPUT 274, Fall 2018                                                    //
+//                                                                         //
+// Final Project                                                           //
+/////////////////////////////////////////////////////////////////////////////
+
+
+/* Game constant configuration */
 #ifndef game_config
 #define game_config
 

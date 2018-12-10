@@ -21,6 +21,14 @@
 | Analog 0         | VRy             |
 | Analog 2         | SW              |
 
+## Files of interest
+* main
+   - will run the game and controlls all game rule logic
+* AnalogStick
+   - Allows for directional input using the analog joystick
+* Snake
+   - The snake object that they player interacts with using the analog stick
+
 ## Installation instructions
 
 To install using the provided make file, the UofA cmput274 virtual machine would be required as it has all dependicies installed.
@@ -46,4 +54,7 @@ In order for the game to be played the joystick accessory for the Arduino is req
  
 ## Acknowledgments
 
-The [Arduino](www.arduino.cc) documentation was used extensivly in making this project.  Primarily to use functions found the the arduino library.  We also used [EEPROM Write Anything](https://playground.arduino.cc/Code/EEPROMWriteAnything) as a reference point on how to use the AVR eeprom memory.
+* [Arduino](www.arduino.cc) documentation was used extensivly in making this project.
+* [EEPROM Write Anything](https://playground.arduino.cc/Code/EEPROMWriteAnything) as a reference point on how to use the AVR eeprom memory.
+* [PDQ_GFX](https://github.com/XarkLabs/PDQ_GFX_Libs) an optimized fork of the adafruit gfx libraries, used for drawing to the screen.
+* [Memory Free](https://playground.arduino.cc/Code/AvailableMemory) for debuging and checking the amount of memory we have free on the arduino.

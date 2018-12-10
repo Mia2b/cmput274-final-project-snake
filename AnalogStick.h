@@ -1,9 +1,18 @@
+/////////////////////////////////////////////////////////////////////////////
+// Name: Amir Hansen, Ralph Milford                                        //
+// ID: 1523209, 1534131                                                    //
+// CMPUT 274, Fall 2018                                                    //
+//                                                                         //
+// Final Project                                                           //
+/////////////////////////////////////////////////////////////////////////////
 #ifndef AnalogStick_h
 #define AnalogStick_h
 #include <Arduino.h>
 
 class AnalogStick
 {
+    /* The Analog Stick take the input angle and magnitude and converts it
+       to a snake direction. */
     private:
         uint8_t  pinX;
         uint8_t  pinY;
