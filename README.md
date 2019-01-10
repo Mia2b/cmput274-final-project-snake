@@ -1,7 +1,7 @@
 # Snake
 ## Fall 2018 Cmput 274 Final Project
-##### Amir Hansen id: 1523209 
-##### Ralph Milford id: 1534131
+##### Mia2b id: 0000000 
+##### HalloweenRalph id: 0000001
 
 ## Defualt Wiring Guide
 | __Arduino Mega__ | __Lcd dispaly__ |
@@ -11,15 +11,15 @@
 | Digital 52       | CLK             |
 | Digital 50       | MISO            |
 | Digital 51       | MOSI            |
-| Digital 48       | CS              |
-| Digital 49       | D/C             |
+| Digital 10       | CS              |
+| Digital 9        | D/C             |
 | Digital 53       | RST             |
 | __Arduino Mega__ | __Joystick__    |
 | GND              | GND             |
 | 5V               | +5V             |
 | Analog 1         | VRx             |
 | Analog 0         | VRy             |
-| Analog 2         | SW              |
+| Digital 2        | SW              |
 
 ## Files of interest
 * main

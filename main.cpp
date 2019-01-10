@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name: Amir Hansen, Ralph Milford                                        //
-// ID: 1523209, 1534131                                                    //
+// Name: Mia2b, HalloweenRalph                                             //
+// ID: 0000000, 0000001                                                    //
 // CMPUT 274, Fall 2018                                                    //
 //                                                                         //
 // Final Project                                                           //
@@ -191,7 +191,7 @@ void runGame()
 	}
 	
 
-	Button button = Button(A2); // A button for checking if the player is ready
+	Button button = Button(2); // A button for checking if the player is ready
 
 	/* Waiting loop for when the player is read to start the game */
 	bool waitingForContinue = true;

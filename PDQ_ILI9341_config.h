@@ -24,8 +24,8 @@
 //
 //  * = Typically only 3.3V safe logic-line (unless board has level converter [ala Adafruit]). Be careful with 5V!
 
-#define	ILI9341_CS_PIN		48			// <= /CS pin (chip-select, LOW to get attention of ILI9341, HIGH and it ignores SPI bus)
-#define	ILI9341_DC_PIN		49			// <= DC pin (1=data or 0=command indicator line) also called RS
+#define	ILI9341_CS_PIN		10			// <= /CS pin (chip-select, LOW to get attention of ILI9341, HIGH and it ignores SPI bus)
+#define	ILI9341_DC_PIN		9			// <= DC pin (1=data or 0=command indicator line) also called RS
 #define	ILI9341_RST_PIN		53			// <= RST pin (optional)
 // 644/1284 #define	ST7735_CS_PIN		4			// <= /CS pin (chip-select, LOW to get attention of ILI9341, HIGH and it ignores SPI bus)
 // 644/1284	#define	ST7735_DC_PIN		3			// <= DC pin (1=data or 0=command indicator line) also called RS

@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
-// Name: Amir Hansen, Ralph Milford                                        //
-// ID: 1523209, 1534131                                                    //
+// Name: Mia2b, HalloweenRalph                                             //
+// ID: 0000000, 0000001                                                    //
 // CMPUT 274, Fall 2018                                                    //
 //                                                                         //
 // Final Project                                                           //
@@ -8,7 +8,7 @@
 #include <Arduino.h>
 #include "Button.h"
 
-/* This button class is a copy of the button class Amir Hansen (me) made for 
+/* This button class is a copy of the button class Mia2b (me) made for 
 the couting lights assignment */
 Button::Button(int setPin)
 {
