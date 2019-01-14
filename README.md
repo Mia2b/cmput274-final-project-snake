@@ -1,7 +1,5 @@
 # Snake
 ## Fall 2018 Cmput 274 Final Project
-##### Mia2b id: 0000000 
-##### HalloweenRalph id: 0000001
 
 ## Defualt Wiring Guide
 | __Arduino Mega__ | __Lcd dispaly__ |
